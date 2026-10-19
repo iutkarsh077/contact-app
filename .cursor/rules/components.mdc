@@ -1,0 +1,16 @@
+---
+description: Shared React component conventions
+globs: src/components/**/*.js
+alwaysApply: false
+---
+
+# Components
+
+See `rule/components.md`.
+
+- Default export for `GeoPicker`, `ContactForm`, `AppShell`, `StatCard`.
+- Reuse `inputClass`, `labelClass`, `btnPrimary`, `btnGhost` from `ui.js`.
+- Pass `nodes` and callbacks into `GeoPicker` / `ContactForm`. Do not subscribe them to the store without need.
+- GeoPicker: blank `<option value="">` always. Parent change clears children. Rural/Urban disabled until `assembly` is set.
+- New records: default geoPath `{ lok_sabha: "ls-1", assembly: "ac-1" }`. Filters may use `allowEmpty`.
+- Appointment files: `fileToDocument`, max 400 KB, data URL in state.

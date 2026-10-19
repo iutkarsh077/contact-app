@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Development Plan — Contact desk (MLA office)</title>
+  <style>
+    @page { size: A4; margin: 25mm; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #202124;
+      max-width: 720px;
+      margin: 32px auto;
+      padding: 0 16px 48px;
+    }
+    h1 { font-size: 18pt; margin: 0 0 8px; }
+    h2 { font-size: 13pt; margin: 22px 0 8px; border-bottom: 1px solid #dadce0; padding-bottom: 4px; }
+    h3 { font-size: 11.5pt; margin: 16px 0 6px; }
+    p, li { margin: 0 0 8px; }
+    ul, ol { margin: 0 0 8px 20px; padding: 0; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0 16px; }
+    th, td { border: 1px solid #dadce0; text-align: left; vertical-align: top; padding: 6px 8px; font-size: 10.5pt; }
+    th { background: #f8f9fa; font-weight: 600; }
+    .meta th { width: 28%; }
+    .label { font-size: 9pt; letter-spacing: 0.04em; text-transform: uppercase; color: #5f6368; }
+    .status { display: inline-block; background: #e8f0fe; color: #174ea6; font-weight: 700; padding: 2px 8px; }
+    .small { font-size: 10pt; color: #5f6368; }
+    .ok { background: #e6f4ea; }
+  </style>
+</head>
+<body>
+  <p class="label">Development Plan</p>
+  <h1>Contact desk for an MLA office — POC</h1>
+  <p class="small">Write this plan after the Feature Request is Confirmed. Write it before new product code. Keep this file separate from the Feature Request.</p>
+
+  <table class="meta">
+    <tr><th>Linked Feature Request</th><td>Contact desk for an MLA office (status Confirmed)</td></tr>
+    <tr><th>Plan owner</th><td>Whoever owns delivery (same developer for this POC)</td></tr>
+    <tr><th>First published</th><td>19 October 2026</td></tr>
+    <tr><th>Last updated</th><td>19 October 2026</td></tr>
+    <tr><th>Time budget</th><td>1 to 2 hours to write</td></tr>
+    <tr><th>Gate</th><td><span class="status">Problem confirmed</span> — solution below. Confidence belongs here, not in the request.</td></tr>
+  </table>
+
+  <h2>1. Confirmed problem</h2>
+  <p>Staff in the MLA office cannot keep contacts in one place. They cannot find a person by administrative area. They do not have a record of past talk and past promises.</p>
+  <p>The first version is a proof of concept. It must show the desk in a browser. Data must stay in that browser. It must not depend on a server database or on SMS.</p>
+  <p>The client confirmed rural and urban geography under Assembly Constituency. The client confirmed volunteer sign-up in the application. The client confirmed meetings with a document. The client confirmed area statistics, pin, notes, travel notices, and optional local requests.</p>
+
+  <h2>2. Options considered</h2>
+  <table>
+    <tr>
+      <th>Option</th>
+      <th>What we do</th>
+      <th>Why we take it or leave it</th>
+    </tr>
+    <tr>
+      <td>A. Spreadsheets and paper</td>
+      <td>No software. Teach a file naming rule.</td>
+      <td>Leave it. It does not give area search, history, or public forms.</td>
+    </tr>
+    <tr class="ok">
+      <td>B. Browser POC (selected)</td>
+      <td>One Next.js app. One store. localStorage. Sample geography. Staff and public switch.</td>
+      <td>Take it. It lets the client see the desk. Cost stays low. It matches “it is a POC”.</td>
+    </tr>
+    <tr>
+      <td>C. Production system</td>
+      <td>Login, shared database, SMS or WhatsApp, file store.</td>
+      <td>Leave it for a later plan. It solves share and notify for real. It is not the confirmed first version.</td>
+    </tr>
+  </table>
+  <p>Selected option: B. We did not pick B to look clever. The client asked for a POC in localStorage. We checked. The proposed limit is the right limit for this version.</p>
+
+  <h3>How option B works (simple)</h3>
+  <p>Think of one notebook in one drawer. The notebook is the store. The drawer is localStorage. Every screen reads that notebook. Writes go through store functions only. Geography is a tree. Each person has a geoPath. A filter on a parent area includes all child areas.</p>
+
+  <h2>3. Blast radius</h2>
+  <p>If this is wrong, how far does the damage spread?</p>
+  <table>
+    <tr><th>Step</th><th>What can break</th></tr>
+    <tr><td>The change itself</td><td>Contact create, search, pin, notes, meetings.</td></tr>
+    <tr><td>One hop out</td><td>Geography picker. If Assembly does not set in state, Rural and Urban stay closed. All forms that use GeoPicker fail.</td></tr>
+    <tr><td>Shared lists</td><td>Volunteers, visits, and requests use the same geoPath and the same inArea helper. A bad match function breaks statistics and travel reach counts.</td></tr>
+    <tr><td>Role split</td><td>Public users can open staff URLs. AppShell must hide those screens. This is a demo switch. It is not security.</td></tr>
+    <tr><td>Storage</td><td>All data is one JSON key: contact-app-poc-v1. A bad persist can replace good data with seed. Reset is a staff action with confirm.</td></tr>
+  </table>
+  <p>Because the radius is the whole desk, we do not ship one feature in isolation. We keep one store and one GeoPicker. We do not add a second list of contacts.</p>
+  <p>Stage the work: store and geography first. Then search. Then history. Then the other lists. Do not start with travel SMS. The POC has no SMS.</p>
+
+  <h2>4. Success criteria</h2>
+  <p>Write these before the build. A criterion that names a button is not success. Success is what changes for the person.</p>
+  <ol>
+    <li>A staff user finds a sample contact by village or by municipal ward without help from another person.</li>
+    <li>A staff user opens that contact and sees notes and meetings for that person, or sees an empty history that they can fill.</li>
+    <li>A staff user pins a contact. The pin shows on the contact list and on the staff home.</li>
+    <li>A public user submits a volunteer form. A staff user sees that person as pending and can accept the person.</li>
+    <li>A staff user schedules a meeting, attaches a file under 400 KB, and opens that file again from the meeting list.</li>
+    <li>A staff user picks a Block. Statistics count contacts that live in villages under that Block, not only contacts tagged with the Block id alone.</li>
+    <li>A staff user publishes a travel notice for an area. Staff home and public home show that notice if the date is today or later.</li>
+    <li>A public user submits a local request. A staff user can mark it reviewed.</li>
+    <li>After a browser refresh, the same data is still there (same browser, same localStorage key).</li>
+  </ol>
+  <p>Not in success for this plan: SMS delivery, multi-device share, real login, full constituency geography.</p>
+
+  <h2>5. Tasks</h2>
+  <p>Each row is small enough for a stranger to pick up.</p>
+  <table>
+    <tr>
+      <th>#</th>
+      <th>Task</th>
+      <th>Done when</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Add seed geography and seed contacts in src/data/seed.js. Include rural and urban nodes under one assembly.</td>
+      <td>createSeedState() returns geoNodes and sample lists.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Add store in src/lib/store.js. Load and save contact-app-poc-v1. Merge onto seed. Persist only after ready.</td>
+      <td>Refresh keeps data. Reset restores seed after confirm.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Add geo helpers in src/lib/geo.js: childrenOf, descendantIds, contactInArea, formatPath.</td>
+      <td>A parent area match includes child areas.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Add GeoPicker. Clear child fields when a parent changes. Keep Rural and Urban disabled until assembly has a value. Always include a blank select option.</td>
+      <td>Staff can pick rural or urban after assembly. The select and state stay in sync.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Add AppShell. Staff menu and public menu. Block public users on staff paths. Role key in localStorage.</td>
+      <td>Public switch hides staff pages. Public can still open home, volunteer form, and request form.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Add contact search page. Filter by text, designation, and area. Pin from the list.</td>
+      <td>Success criterion 1 and 3 for the list.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Add contact create and detail. Validate 10-digit phone. Notes add/remove. Show meetings. Link to schedule with contactId.</td>
+      <td>Success criterion 2.</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Add appointments page. Optional contact. Else geoPath. fileToDocument with 400 KB limit.</td>
+      <td>Success criterion 5.</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Add public volunteer form and staff volunteer list with accept.</td>
+      <td>Success criterion 4.</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Add stats page. Deepest selected area. Count with inArea.</td>
+      <td>Success criterion 6.</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Add visits page and show upcoming visits on home for staff and public.</td>
+      <td>Success criterion 7.</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>Add public request form and staff request list with reviewed status.</td>
+      <td>Success criterion 8.</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>Add staff home counts, upcoming notices, and pinned contacts.</td>
+      <td>Home matches the store. No second data source.</td>
+    </tr>
+  </table>
+
+  <h2>6. Effort and dates</h2>
+  <table>
+    <tr><th>Item</th><th>Value</th></tr>
+    <tr><td>Effort</td><td>3 to 5 working days for one developer</td></tr>
+    <tr><td>Stack</td><td>Next.js App Router, React, Tailwind, JavaScript. No new packages for data.</td></tr>
+    <tr><td>Start</td><td>After this plan is reviewed. Do not start code while the Feature Request is Raw.</td></tr>
+    <tr><td>Demo</td><td>Walk the nine success criteria on / with Staff and Public.</td></tr>
+  </table>
+  <p>This plan records the agreed POC. The repo already contains this design. New work must still pass the same gate: Confirm the problem. Then change the plan. Then change the code.</p>
+
+  <h2>7. Open risks</h2>
+  <table>
+    <tr>
+      <th>Risk</th>
+      <th>If it happens</th>
+      <th>What we do</th>
+    </tr>
+    <tr>
+      <td>Client expects SMS for travel notices</td>
+      <td>Demo looks “not notified”</td>
+      <td>Say in the UI that the POC shows the notice in the app. Put SMS in a later request.</td>
+    </tr>
+    <tr>
+      <td>Data lives in one browser</td>
+      <td>Second computer looks empty</td>
+      <td>Say it on the shell. Do not fake a server.</td>
+    </tr>
+    <tr>
+      <td>Role switch is not login</td>
+      <td>Anyone can click Staff</td>
+      <td>Accept for POC. Do not call it security.</td>
+    </tr>
+    <tr>
+      <td>Meeting files as data URLs</td>
+      <td>localStorage grows or fails</td>
+      <td>Keep the 400 KB limit. Do not store large PDFs.</td>
+    </tr>
+    <tr>
+      <td>Sample geography only</td>
+      <td>Client thinks Chomu is the product</td>
+      <td>Say it is seed data. A later request can load a full tree.</td>
+    </tr>
+    <tr>
+      <td>GeoPicker state vs select UI</td>
+      <td>Rural and Urban stay disabled</td>
+      <td>Always render a blank option. Default lok_sabha and assembly on create forms. See known bug and fix in GeoPicker.</td>
+    </tr>
+  </table>
+
+  <h2>Review</h2>
+  <p>One reviewer must read this plan. The reviewer looks for: guess stated as fact, success written as a button, empty blast radius, tasks that a stranger cannot pick up, and a plan written while the request was still Raw.</p>
+  <p>This plan waits on a named person in the MLA office. The Feature Request still does not have that name. Delivery can start for the POC. The name must go into the request when the client gives it.</p>
+</body>
+</html>

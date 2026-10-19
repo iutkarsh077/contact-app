@@ -1,0 +1,24 @@
+---
+description: JavaScript style for this project
+globs: "**/*.js"
+alwaysApply: false
+---
+
+# JavaScript
+
+See `rule/javascript.md`.
+
+- ES modules. Function components. `function` for handlers in the file.
+- Copy state. Do not mutate store arrays.
+
+```javascript
+// Wrong
+state.contacts.push(record);
+
+// Right
+contacts: [record, ...s.contacts]
+```
+
+- Ids: `crypto.randomUUID()`. Dates: ISO strings. Phones: 10 digits on save, `formatPhone` in UI.
+- Form errors: set an `error` string. Do not save invalid data.
+- Keep `.js` files (current app convention).

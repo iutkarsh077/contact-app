@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Feature Request — Contact desk (MLA office)</title>
+  <style>
+    @page { size: A4; margin: 25mm; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #202124;
+      max-width: 720px;
+      margin: 32px auto;
+      padding: 0 16px 48px;
+    }
+    h1 { font-size: 18pt; margin: 0 0 8px; }
+    h2 { font-size: 13pt; margin: 22px 0 8px; border-bottom: 1px solid #dadce0; padding-bottom: 4px; }
+    p, li { margin: 0 0 8px; }
+    ul { margin: 0 0 8px 20px; padding: 0; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0 16px; }
+    th, td { border: 1px solid #dadce0; text-align: left; vertical-align: top; padding: 6px 8px; font-size: 10.5pt; }
+    th { background: #f8f9fa; width: 28%; font-weight: 600; }
+    .meta td { width: auto; }
+    .quote { background: #f8f9fa; border-left: 3px solid #80868b; padding: 8px 12px; margin: 8px 0 12px; }
+    .label { font-size: 9pt; letter-spacing: 0.04em; text-transform: uppercase; color: #5f6368; }
+    .status { display: inline-block; background: #e6f4ea; color: #137333; font-weight: 700; padding: 2px 8px; }
+    .guess { background: #fef7e0; padding: 2px 4px; }
+    .small { font-size: 10pt; color: #5f6368; }
+  </style>
+</head>
+<body>
+  <p class="label">Feature Request</p>
+  <h1>Contact desk for an MLA office</h1>
+  <p class="small">Project: contact-app (proof of concept). Keep this file separate from the Development Plan.</p>
+
+  <table class="meta">
+    <tr><th>Status</th><td><span class="status">Confirmed</span> — The client confirmed field 3 and field 4. Then the client asked to build a POC.</td></tr>
+    <tr><th>Document owner</th><td>Whoever heard the ask (developer). Process owner of this template: Sriram Reddy Rao.</td></tr>
+    <tr><th>First published</th><td>19 October 2026</td></tr>
+    <tr><th>Last updated</th><td>19 October 2026</td></tr>
+    <tr><th>Time used</th><td>About 25 minutes</td></tr>
+    <tr><th>Source of the ask</th><td>Client PDF titled “Contact Management App”, saved in the repo as goal.md.</td></tr>
+  </table>
+
+  <h2>1. What they said</h2>
+  <p>Write the client words. Do not rewrite them as a design.</p>
+  <div class="quote">
+    <p><strong>Problems</strong></p>
+    <p>Too much contact information. Contact information is spread across different sources, which makes it difficult to manage and find the right contact.</p>
+    <p>Missing history. Staff may not have a complete record of past interactions or commitments.</p>
+    <p><strong>Goal</strong></p>
+    <p>Keep all contact information in one centralized location. Make it easy to search, filter, and manage contacts by geographical area and designation.</p>
+    <p><strong>Feature requests (client list)</strong></p>
+    <ul>
+      <li>Universal contact search. Search and filter phone numbers and contacts by geographical area. Support searches by Assembly Constituency, Block/Tehsil, Gram Panchayat, Village, Panchayat Ward, Municipality, and Municipal Ward.</li>
+      <li>Volunteer registration. Allow people to register as volunteers directly through the application.</li>
+      <li>Appointment and meeting management. Schedule appointments and meetings. Attach relevant meeting documents.</li>
+      <li>Area-wise statistics. Display statistics based on geographical areas. Provide insights into contacts, volunteers, and other relevant data.</li>
+      <li>Travel notifications. Notify people in a particular area when the MLA plans to visit that area.</li>
+      <li>Pin contacts. Users can pin important contacts.</li>
+      <li>Notes section. Every contact has a notes and appointment section.</li>
+      <li>Locals request for MLA (optional). Local people can request development or report issues in their area.</li>
+    </ul>
+    <p><strong>Geographical hierarchy (client list)</strong></p>
+    <p>Lok Sabha Constituency. Assembly Constituency. Rural: Block/Tehsil, Gram Panchayat, Village, Panchayat Ward. Urban: Municipality, Municipal Ward, Locality/Colony (optional). The geographical hierarchy should support both rural and urban areas. The application should allow users to find contacts at the appropriate administrative level.</p>
+  </div>
+  <p>Later the same client said: remember it is a POC. Store data in localStorage.</p>
+
+  <h2>2. Who hurts, when, and the current workaround</h2>
+  <p><span class="guess">Name not given.</span> The PDF names a role, not a person. Do not invent a name.</p>
+  <p><span class="guess">I think:</span> a staff member in the MLA office hurts. The moment is before a call or a field visit. The staff member must find the right local person by area and by job title.</p>
+  <p><span class="guess">I think the workaround is:</span> phones, paper lists, WhatsApp groups, and memory. History of talk and promises lives in those same places. It is not in one list.</p>
+  <p>Public people also hurt when they want to volunteer or to send a local request. <span class="guess">I think</span> they use a paper form or a phone call today.</p>
+
+  <h2>3. Underlying problem</h2>
+  <p><strong>Client confirmed (after the goal review and the order to build):</strong></p>
+  <p>Contact data lives in many sources. Staff cannot find a person by administrative area in one place. Staff do not have a full record of past talk and past promises.</p>
+  <p>The client also confirmed the scope for this version: a POC in the browser. No server database. No SMS system.</p>
+  <p><span class="guess">I think, not fully confirmed:</span> “Notify people” in the PDF means SMS or WhatsApp in a later product. For the POC, an in-app notice can show the same idea. The client accepted a POC. The client did not confirm SMS.</p>
+  <p>Check: if we only add one filter, the hurt does not stop. Staff still need one list, area levels for rural and urban, and history on each person.</p>
+
+  <h2>4. What “solved” looks like for the client</h2>
+  <p>Write outcomes. Do not name buttons as success.</p>
+  <ul>
+    <li>Staff find a contact by area and by designation from one list. They do not ask a colleague for a number.</li>
+    <li>Staff open a contact and see past notes and meetings before they call.</li>
+    <li>Staff mark important people so those people stay easy to find.</li>
+    <li>A person can register as a volunteer in the application. Staff can see that registration.</li>
+    <li>Staff can schedule a meeting and keep a small meeting file with it.</li>
+    <li>Staff can pick an area and see counts for contacts, volunteers, meetings, and requests in that area and below it.</li>
+    <li>When the MLA plans a visit, staff can publish a notice for that area. People in that area can see the notice in the application.</li>
+    <li>Optional: a local person can send a development or issue request. Staff can mark it as reviewed.</li>
+  </ul>
+  <p>For this POC, “solved” does not mean: login, shared data across computers, or real SMS.</p>
+
+  <h2>5. Questions to confirm</h2>
+  <p>These questions can change the plan. Clear asks are still dangerous. Write the questions.</p>
+  <ol>
+    <li>Who is the named staff owner of the contact list? Give a name, not a role.</li>
+    <li>For the first version, does “notify” mean an in-app notice only, or SMS / WhatsApp?</li>
+    <li>How many Lok Sabha and Assembly units must the first tree hold? One sample tree, or the full constituency?</li>
+    <li>Must Locality/Colony exist in the first urban path, or can it stay optional?</li>
+    <li>Is “Locals request for MLA” in the first build or out of it?</li>
+    <li>What file types and size must a meeting document support?</li>
+  </ol>
+  <p>Answers we already have: POC. localStorage. Rural and urban both in. Optional local requests in the POC. In-app travel notices. Meeting files under 400 KB in the browser.</p>
+
+  <h2>6. Blast radius</h2>
+  <p>If this work is wrong, the damage is not one screen.</p>
+  <ul>
+    <li><strong>Direct:</strong> contact list, search, pin, notes, meetings.</li>
+    <li><strong>One hop:</strong> geography tree. If the tree is wrong, search, statistics, and travel notices all fail.</li>
+    <li><strong>One hop:</strong> volunteer list and public volunteer form. Same area model.</li>
+    <li><strong>One hop:</strong> local requests. Same area model. Staff inbox.</li>
+    <li><strong>One hop:</strong> staff screens vs public screens. A public user must not see staff lists.</li>
+    <li><strong>Storage hop:</strong> all lists sit in one browser key. A bad write can wipe sample data. Reset exists for the POC.</li>
+  </ul>
+  <p>This is not a two-hour change on one report. It is a new desk that many flows share.</p>
+
+  <h2>7. Rough estimate to resolve</h2>
+  <p>Browser POC with sample geography: about 3 to 5 working days for one developer who knows the stack.</p>
+  <p>This estimate is not for a production system. Production with login, a shared database, and SMS is a later plan. Do not mix that estimate with this POC.</p>
+
+  <h2>Status note</h2>
+  <p>Status is <strong>Confirmed</strong>. Field 3 and field 4 were confirmed when the client matched the work to goal.md and said to start the build as a POC.</p>
+  <p>Nothing in this file is the solution design. The Development Plan holds the solution. Write the plan only after this status is Confirmed.</p>
+</body>
+</html>

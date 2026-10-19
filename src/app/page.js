@@ -1,69 +1,176 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import StatCard from "@/components/StatCard";
+import { useStore } from "@/lib/store";
+import { areaName, formatPath } from "@/lib/geo";
+import { formatPhone } from "@/components/ui";
+
+export default function HomePage() {
+  const { state, role, inArea } = useStore();
+  const { contacts, volunteers, appointments, visits, requests, geoNodes } =
+    state;
+  const [today, setToday] = useState("");
+  useEffect(() => {
+    setToday(todayISO());
+  }, []);
+  const pinned = contacts.filter((c) => c.pinned);
+  const upcomingVisits = today
+    ? visits.filter((v) => v.date >= today)
+    : [];
+
+  if (role === "public") {
+    return (
+      <div className="mx-auto max-w-3xl space-y-6">
+        <header>
+          <h1 className="text-2xl font-semibold">Constituency desk</h1>
+          <p className="mt-1 text-sm text-slate-600">
+            Register as a volunteer or send a development request. Travel
+            notices for MLA visits appear below.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        </header>
+        <VisitList visits={upcomingVisits} geoNodes={geoNodes} />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/volunteers/register"
+            className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <p className="font-medium">Volunteer registration</p>
+            <p className="mt-1 text-sm text-slate-600">
+              Sign up directly through this application.
+            </p>
+          </Link>
+          <Link
+            href="/requests/new"
+            className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700"
           >
-            Documentation
-          </a>
+            <p className="font-medium">Request for MLA</p>
+            <p className="mt-1 text-sm text-slate-600">
+              Report an issue or request development in your area.
+            </p>
+          </Link>
         </div>
-      </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl space-y-6">
+      <header>
+        <h1 className="text-2xl font-semibold">Centralized contact desk</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          All office contacts live here — searchable by phone, geography, and
+          designation.
+        </p>
+      </header>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Contacts" value={contacts.length} hint="One store" />
+        <StatCard
+          label="Volunteers"
+          value={volunteers.length}
+          hint={`${volunteers.filter((v) => v.status === "pending").length} pending`}
+        />
+        <StatCard
+          label="Appointments"
+          value={appointments.length}
+          hint="Meetings & follow-ups"
+        />
+        <StatCard
+          label="Open requests"
+          value={requests.filter((r) => r.status === "open").length}
+        />
+      </div>
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Travel notifications
+        </h2>
+        {upcomingVisits.length === 0 ? (
+          <p className="text-sm text-slate-500">No upcoming MLA visits.</p>
+        ) : (
+          upcomingVisits.map((v) => {
+            const notified = contacts.filter((c) =>
+              inArea(c.geoPath, v.areaId),
+            ).length;
+            const volN = volunteers.filter((c) =>
+              inArea(c.geoPath, v.areaId),
+            ).length;
+            return (
+              <div
+                key={v.id}
+                className="rounded-xl border border-amber-200 bg-amber-50 p-4"
+              >
+                <p className="font-medium text-amber-950">
+                  MLA visit · {v.date} · {areaName(geoNodes, v.areaId)}
+                </p>
+                <p className="mt-1 text-sm text-amber-900">{v.message}</p>
+                <p className="mt-2 text-xs text-amber-800">
+                  Notifies {notified} contacts and {volN} volunteers in this
+                  area.
+                </p>
+              </div>
+            );
+          })
+        )}
+      </section>
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Pinned contacts
+          </h2>
+          <Link href="/contacts" className="text-sm text-teal-800 underline">
+            Open contacts
+          </Link>
+        </div>
+        {pinned.length === 0 ? (
+          <p className="text-sm text-slate-500">No pinned contacts yet.</p>
+        ) : (
+          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+            {pinned.map((c) => (
+              <li key={c.id} className="px-4 py-3">
+                <Link href={`/contacts/${c.id}`} className="font-medium hover:underline">
+                  {c.name}
+                </Link>
+                <p className="text-sm text-slate-600">
+                  {formatPhone(c.phone)} · {c.designation}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {formatPath(geoNodes, c.geoPath)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
+}
+
+function VisitList({ visits, geoNodes }) {
+  if (visits.length === 0) {
+    return (
+      <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+        No MLA travel notices right now.
+      </p>
+    );
+  }
+  return (
+    <div className="space-y-3">
+      {visits.map((v) => (
+        <div
+          key={v.id}
+          className="rounded-xl border border-amber-200 bg-amber-50 p-4"
+        >
+          <p className="font-medium text-amber-950">
+            MLA visiting {areaName(geoNodes, v.areaId)} on {v.date}
+          </p>
+          <p className="mt-1 text-sm text-amber-900">{v.message}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
 }

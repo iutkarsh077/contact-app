@@ -1,0 +1,23 @@
+---
+description: Store persistence and geography tree
+globs: src/lib/**/*.js,src/data/**/*.js
+alwaysApply: false
+---
+
+# Store and geography
+
+See `rule/store-and-geo.md`.
+
+- Mutate lists only inside `update(fn)` with a new object `{ ...s, key: next }`.
+- Persist only after `ready`. Merge `localStorage` JSON onto `createSeedState()`.
+- New entities: add the array in seed, add `add*` / `upsert*` with `id` and `createdAt`, add `geoPath` if the record has a place.
+- `GEO_LEVELS` is the only level list. Nodes need `id`, `name`, `level`, `parentId`.
+- Match areas with `descendantIds` / `contactInArea`, not string names.
+
+```javascript
+// Wrong
+contact.area === "Chomu"
+
+// Right
+inArea(contact.geoPath, areaId)
+```

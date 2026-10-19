@@ -1,0 +1,17 @@
+---
+description: App Router page conventions
+globs: src/app/**/*.js
+alwaysApply: false
+---
+
+# Pages
+
+See `rule/pages.md`.
+
+- Client feature pages use `"use client"` and `useStore()`.
+- Layout: `mx-auto max-w-* space-y-*`, `h1`, one-line description.
+- Forms: local `useState`, validate, then one store call.
+- `confirm()` before delete or reset.
+- `useSearchParams` needs `Suspense` (see `src/app/appointments/page.js`).
+- Area filters: deepest level from ward up to lok_sabha, then `inArea`. Do not equality-match one geoPath key only.
+- After `upsertContact` on create, route to `/contacts/{id}`.
