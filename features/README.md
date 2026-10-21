@@ -15,16 +15,18 @@ Read the files in this order if you are new:
 
 1. [Geographical hierarchy](geographical-hierarchy.md)
 2. [Staff and public roles](staff-and-public-roles.md)
-3. [Dashboard](dashboard.md)
-4. [Universal contact search](universal-contact-search.md)
-5. [Add and edit contacts](add-and-edit-contacts.md)
-6. [Pin contacts](pin-contacts.md)
-7. [Notes and history](notes-and-history.md)
-8. [Appointments](appointments.md)
-9. [Volunteer registration](volunteer-registration.md)
-10. [Area-wise statistics](area-wise-statistics.md)
-11. [Travel notifications](travel-notifications.md)
-12. [Local requests](local-requests.md)
+3. [Languages](languages.md)
+4. [Responsive layout](responsive.md)
+5. [Dashboard](dashboard.md)
+6. [Universal contact search](universal-contact-search.md)
+7. [Add and edit contacts](add-and-edit-contacts.md)
+8. [Pin contacts](pin-contacts.md)
+9. [Notes and history](notes-and-history.md)
+10. [Appointments](appointments.md)
+11. [Volunteer registration](volunteer-registration.md)
+12. [Area-wise statistics](area-wise-statistics.md)
+13. [Travel notifications](travel-notifications.md)
+14. [Local requests](local-requests.md)
 
 After the features, read [dataflow.md](../dataflow.md). That file shows how data moves through the whole app.
 
@@ -41,3 +43,4 @@ Use these words in all feature files. Do not mix synonyms.
 | Staff | Office user |
 | Public | Citizen user |
 | POC | This browser-only demo |
+| Locale | UI language: `en`, `hi`, or `te` |

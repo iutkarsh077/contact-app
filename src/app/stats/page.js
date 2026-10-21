@@ -7,7 +7,7 @@ import { useStore } from "@/lib/store";
 import { areaName } from "@/lib/geo";
 
 export default function StatsPage() {
-  const { state, inArea } = useStore();
+  const { state, inArea, t } = useStore();
   const [geo, setGeo] = useState({ lok_sabha: "ls-1" });
   const areaId = deepest(geo);
 
@@ -35,27 +35,30 @@ export default function StatsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-5">
       <header>
-        <h1 className="text-2xl font-semibold">Area-wise statistics</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Pick an administrative level. Counts include that area and everything
-          under it.
-        </p>
+        <h1 className="text-2xl font-semibold">{t("stats.title")}</h1>
+        <p className="mt-1 text-sm text-slate-600">{t("stats.lead")}</p>
       </header>
       <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <GeoPicker nodes={state.geoNodes} value={geo} onChange={setGeo} allowEmpty />
+        <GeoPicker nodes={state.geoNodes} value={geo} onChange={setGeo} allowEmpty t={t} />
       </div>
       <p className="text-sm text-slate-600">
-        Showing: {areaId ? areaName(state.geoNodes, areaId) : "Entire seed geography"}
+        {t("stats.showing", {
+          area: areaId ? areaName(state.geoNodes, areaId) : t("stats.entire"),
+        })}
       </p>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard label="Contacts" value={stats.contacts} hint={`${stats.pinned} pinned`} />
         <StatCard
-          label="Volunteers"
-          value={stats.volunteers}
-          hint={`${stats.pendingVol} pending`}
+          label={t("stats.contacts")}
+          value={stats.contacts}
+          hint={t("stats.pinnedCount", { count: stats.pinned })}
         />
-        <StatCard label="Appointments" value={stats.appointments} />
-        <StatCard label="Open local requests" value={stats.openRequests} />
+        <StatCard
+          label={t("stats.volunteers")}
+          value={stats.volunteers}
+          hint={t("stats.pendingCount", { count: stats.pendingVol })}
+        />
+        <StatCard label={t("stats.appointments")} value={stats.appointments} />
+        <StatCard label={t("stats.openRequests")} value={stats.openRequests} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 export const inputClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20";
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20";
 
 export const labelClass = "mb-1 block text-xs font-medium text-slate-600";
 
@@ -9,11 +9,13 @@ export const btnPrimary =
 export const btnGhost =
   "inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50";
 
-export function formatDate(iso) {
+export function formatDate(iso, locale) {
   if (!iso) return "—";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString("en-IN", {
+  const tag =
+    locale === "hi" ? "hi-IN" : locale === "te" ? "te-IN" : "en-IN";
+  return d.toLocaleString(tag, {
     day: "numeric",
     month: "short",
     year: "numeric",

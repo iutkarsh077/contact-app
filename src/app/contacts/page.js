@@ -9,7 +9,7 @@ import { formatPath } from "@/lib/geo";
 import { btnPrimary, formatPhone, inputClass, labelClass } from "@/components/ui";
 
 export default function ContactsPage() {
-  const { state, togglePin, inArea } = useStore();
+  const { state, togglePin, inArea, t } = useStore();
   const [q, setQ] = useState("");
   const [designation, setDesignation] = useState("");
   const [geo, setGeo] = useState({ lok_sabha: "ls-1" });
@@ -40,53 +40,49 @@ export default function ContactsPage() {
     <div className="mx-auto max-w-5xl space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Universal contact search</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Search phone numbers and names. Filter by designation and
-            geographical area.
-          </p>
+          <h1 className="text-2xl font-semibold">{t("contacts.title")}</h1>
+          <p className="mt-1 text-sm text-slate-600">{t("contacts.lead")}</p>
         </div>
         <Link href="/contacts/new" className={btnPrimary}>
-          Add contact
+          {t("contacts.add")}
         </Link>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3">
         <label className="block">
-          <span className={labelClass}>Search name or phone</span>
+          <span className={labelClass}>{t("contacts.searchLabel")}</span>
           <input
             className={inputClass}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="e.g. 98290 or Ramesh"
+            placeholder={t("contacts.searchPlaceholder")}
           />
         </label>
         <label className="block max-w-sm">
-          <span className={labelClass}>Designation</span>
+          <span className={labelClass}>{t("contacts.designation")}</span>
           <select
             className={inputClass}
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
           >
-            <option value="">All designations</option>
+            <option value="">{t("contacts.allDesignations")}</option>
             {DESIGNATIONS.map((d) => (
               <option key={d} value={d}>
-                {d}
+                {t(`designation.${d}`)}
               </option>
             ))}
           </select>
         </label>
         <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-          Geographical filters
+          {t("contacts.geoFilters")}
         </p>
-        <GeoPicker nodes={state.geoNodes} value={geo} onChange={setGeo} allowEmpty />
+        <GeoPicker nodes={state.geoNodes} value={geo} onChange={setGeo} allowEmpty t={t} />
       </div>
 
-      <p className="text-sm text-slate-500">{rows.length} contacts</p>
+      <p className="text-sm text-slate-500">{t("contacts.count", { count: rows.length })}</p>
       {rows.length === 0 ? (
         <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-          No contacts match this search or area. Try a higher administrative
-          level.
+          {t("contacts.empty")}
         </p>
       ) : (
         <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -112,7 +108,7 @@ export default function ContactsPage() {
                 onClick={() => togglePin(c.id)}
                 className="text-xs text-teal-800 underline"
               >
-                {c.pinned ? "Unpin" : "Pin"}
+                {c.pinned ? t("contacts.unpin") : t("contacts.pin")}
               </button>
             </li>
           ))}

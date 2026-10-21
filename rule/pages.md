@@ -8,7 +8,7 @@ A page is a room. The store is the warehouse. The page asks the warehouse. The p
 
 1. Put the route in `src/app/<path>/page.js`.
 2. Add `"use client"` when the page uses `useStore`, `useState`, or browser events. Current feature pages are client pages.
-3. Call `const { state, ... } = useStore()` near the top.
+3. Call `const { state, t, ... } = useStore()` near the top. Put chrome strings through `t()`.
 4. Keep form fields in local `useState`. Send a finished object into the store on submit.
 5. Validate before write. Show `error` as a red text line. Do not save invalid data.
 6. Wrap the page body in `div` with `mx-auto max-w-* space-y-*`.

@@ -3,9 +3,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { createSeedState } from "@/data/seed";
 import { contactInArea } from "@/lib/geo";
+import { isLocale, translate } from "@/i18n";
 
 export const STORAGE_KEY = "contact-app-poc-v1";
 export const ROLE_KEY = "contact-app-poc-role";
+export const LOCALE_KEY = "contact-app-poc-locale";
 
 function uid() {
   return crypto.randomUUID();
@@ -36,12 +38,15 @@ const StoreContext = createContext(null);
 export function StoreProvider({ children }) {
   const [state, setState] = useState(() => createSeedState());
   const [role, setRoleState] = useState("staff");
+  const [locale, setLocaleState] = useState("en");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setState(loadState());
     const saved = localStorage.getItem(ROLE_KEY);
     if (saved === "public" || saved === "staff") setRoleState(saved);
+    const savedLocale = localStorage.getItem(LOCALE_KEY);
+    if (isLocale(savedLocale)) setLocaleState(savedLocale);
     setReady(true);
   }, []);
 
@@ -62,9 +67,16 @@ export function StoreProvider({ children }) {
     return {
       state,
       role,
+      locale,
+      t: (key, vars) => translate(locale, key, vars),
       setRole: (next) => {
         setRoleState(next);
         localStorage.setItem(ROLE_KEY, next);
+      },
+      setLocale: (next) => {
+        if (!isLocale(next)) return;
+        setLocaleState(next);
+        localStorage.setItem(LOCALE_KEY, next);
       },
       reset: () => setState(createSeedState()),
       upsertContact: (contact) => {
@@ -197,7 +209,7 @@ export function StoreProvider({ children }) {
       inArea: (geoPath, areaId) =>
         contactInArea(state.geoNodes, geoPath, areaId),
     };
-  }, [state, role]);
+  }, [state, role, locale]);
 
   return <StoreContext.Provider value={api}>{children}</StoreContext.Provider>;
 }

@@ -16,5 +16,5 @@ Full text: `rule/` in the repo. Follow those files when you write code.
 - Keep one store. Pages read `useStore()` and write only through store functions.
 - Geography is a tree plus a `geoPath` object. Use `GeoPicker` and `inArea` / `contactInArea`.
 - Roles are only `staff` and `public`. New public routes must be added to `isPublicAllowed` in `AppShell.js`.
-- UI: slate + teal-800, shared classes in `src/components/ui.js`.
+- UI: slate + teal-800, shared classes in `src/components/ui.js`. Phone first. Nav chips on a small screen. Dark sidebar from `md`. Sticky shell in `AppShell`.
 - Docs in `features/` and `dataflow.md` use ASD-STE100. Keep the same words: contact, store, geoPath, area, staff, public, POC.

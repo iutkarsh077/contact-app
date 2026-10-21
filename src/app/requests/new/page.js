@@ -6,7 +6,7 @@ import { useStore } from "@/lib/store";
 import { btnPrimary, inputClass, labelClass } from "@/components/ui";
 
 export default function NewRequestPage() {
-  const { state, addRequest } = useStore();
+  const { state, addRequest, t } = useStore();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [issue, setIssue] = useState("");
@@ -18,11 +18,11 @@ export default function NewRequestPage() {
     e.preventDefault();
     const digits = phone.replace(/\D/g, "");
     if (!name.trim() || digits.length !== 10 || !issue.trim()) {
-      setError("Name, phone, and issue details are required");
+      setError(t("requests.needFields"));
       return;
     }
     if (!geoPath.assembly || !geoPath.areaType) {
-      setError("Select your area");
+      setError(t("requests.needArea"));
       return;
     }
     addRequest({
@@ -37,10 +37,8 @@ export default function NewRequestPage() {
   if (done) {
     return (
       <div className="mx-auto max-w-lg rounded-xl border border-teal-200 bg-teal-50 p-6">
-        <h1 className="text-xl font-semibold text-teal-950">Request submitted</h1>
-        <p className="mt-2 text-sm text-teal-900">
-          The office can review this development / issue request in the app.
-        </p>
+        <h1 className="text-xl font-semibold text-teal-950">{t("requests.doneTitle")}</h1>
+        <p className="mt-2 text-sm text-teal-900">{t("requests.doneLead")}</p>
       </div>
     );
   }
@@ -48,26 +46,24 @@ export default function NewRequestPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold">Request for MLA</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Ask for development work or report an issue in your area.
-        </p>
+        <h1 className="text-2xl font-semibold">{t("requests.newTitle")}</h1>
+        <p className="mt-1 text-sm text-slate-600">{t("requests.newLead")}</p>
       </header>
       <form
         onSubmit={onSubmit}
         className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
       >
         <label className="block">
-          <span className={labelClass}>Your name</span>
+          <span className={labelClass}>{t("requests.yourName")}</span>
           <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} />
         </label>
         <label className="block">
-          <span className={labelClass}>Phone</span>
+          <span className={labelClass}>{t("requests.phone")}</span>
           <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} />
         </label>
-        <GeoPicker nodes={state.geoNodes} value={geoPath} onChange={setGeoPath} />
+        <GeoPicker nodes={state.geoNodes} value={geoPath} onChange={setGeoPath} t={t} />
         <label className="block">
-          <span className={labelClass}>Issue or development request</span>
+          <span className={labelClass}>{t("requests.issue")}</span>
           <textarea
             className={inputClass}
             rows={4}
@@ -77,7 +73,7 @@ export default function NewRequestPage() {
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <button type="submit" className={btnPrimary}>
-          Submit request
+          {t("requests.submit")}
         </button>
       </form>
     </div>

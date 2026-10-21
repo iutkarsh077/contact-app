@@ -15,6 +15,7 @@ You must:
 5. Wait for `ready` before persist. This avoids writing empty seed over saved data during hydrate.
 6. Export `useStore`. Throw if a component is outside `StoreProvider`.
 7. Keep `inArea` as a wrapper around `contactInArea(state.geoNodes, geoPath, areaId)`.
+8. Keep `locale` next to `role`. Persist it on `contact-app-poc-locale`. Do not put locale inside `STORAGE_KEY` JSON. `reset()` must not clear locale.
 
 New entity rules:
 

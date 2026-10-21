@@ -8,7 +8,7 @@ import { areaName, formatPath } from "@/lib/geo";
 import { formatPhone } from "@/components/ui";
 
 export default function HomePage() {
-  const { state, role, inArea } = useStore();
+  const { state, role, inArea, t } = useStore();
   const { contacts, volunteers, appointments, visits, requests, geoNodes } =
     state;
   const [today, setToday] = useState("");
@@ -19,35 +19,33 @@ export default function HomePage() {
   const upcomingVisits = today
     ? visits.filter((v) => v.date >= today)
     : [];
+  const pendingVol = volunteers.filter((v) => v.status === "pending").length;
 
   if (role === "public") {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <header>
-          <h1 className="text-2xl font-semibold">Constituency desk</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Register as a volunteer or send a development request. Travel
-            notices for MLA visits appear below.
-          </p>
+          <h1 className="text-2xl font-semibold">{t("home.publicTitle")}</h1>
+          <p className="mt-1 text-sm text-slate-600">{t("home.publicLead")}</p>
         </header>
-        <VisitList visits={upcomingVisits} geoNodes={geoNodes} />
+        <VisitList visits={upcomingVisits} geoNodes={geoNodes} t={t} />
         <div className="grid gap-3 sm:grid-cols-2">
           <Link
             href="/volunteers/register"
             className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700"
           >
-            <p className="font-medium">Volunteer registration</p>
+            <p className="font-medium">{t("home.volunteerCard")}</p>
             <p className="mt-1 text-sm text-slate-600">
-              Sign up directly through this application.
+              {t("home.volunteerCardHint")}
             </p>
           </Link>
           <Link
             href="/requests/new"
             className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700"
           >
-            <p className="font-medium">Request for MLA</p>
+            <p className="font-medium">{t("home.requestCard")}</p>
             <p className="mt-1 text-sm text-slate-600">
-              Report an issue or request development in your area.
+              {t("home.requestCardHint")}
             </p>
           </Link>
         </div>
@@ -58,35 +56,36 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold">Centralized contact desk</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          All office contacts live here — searchable by phone, geography, and
-          designation.
-        </p>
+        <h1 className="text-2xl font-semibold">{t("home.staffTitle")}</h1>
+        <p className="mt-1 text-sm text-slate-600">{t("home.staffLead")}</p>
       </header>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Contacts" value={contacts.length} hint="One store" />
         <StatCard
-          label="Volunteers"
+          label={t("home.contacts")}
+          value={contacts.length}
+          hint={t("home.oneStore")}
+        />
+        <StatCard
+          label={t("home.volunteers")}
           value={volunteers.length}
-          hint={`${volunteers.filter((v) => v.status === "pending").length} pending`}
+          hint={t("home.pendingCount", { count: pendingVol })}
         />
         <StatCard
-          label="Appointments"
+          label={t("home.appointments")}
           value={appointments.length}
-          hint="Meetings & follow-ups"
+          hint={t("home.meetingsHint")}
         />
         <StatCard
-          label="Open requests"
+          label={t("home.openRequests")}
           value={requests.filter((r) => r.status === "open").length}
         />
       </div>
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Travel notifications
+          {t("home.travel")}
         </h2>
         {upcomingVisits.length === 0 ? (
-          <p className="text-sm text-slate-500">No upcoming MLA visits.</p>
+          <p className="text-sm text-slate-500">{t("home.noVisits")}</p>
         ) : (
           upcomingVisits.map((v) => {
             const notified = contacts.filter((c) =>
@@ -101,12 +100,14 @@ export default function HomePage() {
                 className="rounded-xl border border-amber-200 bg-amber-50 p-4"
               >
                 <p className="font-medium text-amber-950">
-                  MLA visit · {v.date} · {areaName(geoNodes, v.areaId)}
+                  {t("home.visitLine", {
+                    date: v.date,
+                    area: areaName(geoNodes, v.areaId),
+                  })}
                 </p>
                 <p className="mt-1 text-sm text-amber-900">{v.message}</p>
                 <p className="mt-2 text-xs text-amber-800">
-                  Notifies {notified} contacts and {volN} volunteers in this
-                  area.
+                  {t("home.notifies", { contacts: notified, volunteers: volN })}
                 </p>
               </div>
             );
@@ -116,14 +117,14 @@ export default function HomePage() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Pinned contacts
+            {t("home.pinned")}
           </h2>
           <Link href="/contacts" className="text-sm text-teal-800 underline">
-            Open contacts
+            {t("home.openContacts")}
           </Link>
         </div>
         {pinned.length === 0 ? (
-          <p className="text-sm text-slate-500">No pinned contacts yet.</p>
+          <p className="text-sm text-slate-500">{t("home.noPinned")}</p>
         ) : (
           <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
             {pinned.map((c) => (
@@ -146,11 +147,11 @@ export default function HomePage() {
   );
 }
 
-function VisitList({ visits, geoNodes }) {
+function VisitList({ visits, geoNodes, t }) {
   if (visits.length === 0) {
     return (
       <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-        No MLA travel notices right now.
+        {t("home.noNotices")}
       </p>
     );
   }
@@ -162,7 +163,10 @@ function VisitList({ visits, geoNodes }) {
           className="rounded-xl border border-amber-200 bg-amber-50 p-4"
         >
           <p className="font-medium text-amber-950">
-            MLA visiting {areaName(geoNodes, v.areaId)} on {v.date}
+            {t("home.visiting", {
+              area: areaName(geoNodes, v.areaId),
+              date: v.date,
+            })}
           </p>
           <p className="mt-1 text-sm text-amber-900">{v.message}</p>
         </div>

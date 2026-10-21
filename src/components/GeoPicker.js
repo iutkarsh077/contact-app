@@ -11,7 +11,13 @@ export default function GeoPicker({
   showLokSabha = true,
   allowEmpty = false,
   requiredThrough = null,
+  t,
 }) {
+  function labelFor(levelId, fallback) {
+    if (!t) return fallback;
+    const translated = t(`geo.${levelId}`);
+    return translated === `geo.${levelId}` ? fallback : translated;
+  }
   const areaType = value.areaType || "";
 
   function setField(level, id) {
@@ -80,44 +86,54 @@ export default function GeoPicker({
     <div className="grid gap-3 sm:grid-cols-2">
       {showLokSabha ? (
         <Field
-          label="Lok Sabha Constituency"
+          label={labelFor("lok_sabha", "Lok Sabha Constituency")}
           value={value.lok_sabha || ""}
           options={nodes.filter((n) => n.level === "lok_sabha")}
           onChange={(id) => setField("lok_sabha", id)}
           allowEmpty={allowEmpty}
           required={requiredThrough === "lok_sabha"}
+          t={t}
         />
       ) : null}
       <Field
-        label="Assembly Constituency"
+        label={labelFor("assembly", "Assembly Constituency")}
         value={value.assembly || ""}
         options={selectFor("assembly")}
         onChange={(id) => setField("assembly", id)}
         disabled={!value.lok_sabha}
         allowEmpty={allowEmpty}
+        t={t}
       />
       <div className="sm:col-span-2">
-        <span className={labelClass}>Area type</span>
-        <div className="flex gap-2">
-          {["rural", "urban"].map((t) => (
+        <span className={labelClass}>
+          {t ? t("geo.areaType") : "Area type"}
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {["rural", "urban"].map((type) => (
             <button
-              key={t}
+              key={type}
               type="button"
-              onClick={() => setAreaType(t)}
+              onClick={() => setAreaType(type)}
               disabled={!hasAssembly}
-              className={`rounded-full px-3 py-1 text-sm capitalize ${
-                areaType === t
+              className={`rounded-full px-3 py-1 text-sm ${
+                areaType === type
                   ? "bg-teal-800 text-white"
                   : "border border-slate-300 text-slate-700"
               } disabled:opacity-40`}
             >
-              {t === "rural" ? "Rural areas" : "Urban areas"}
+              {t
+                ? t(`geo.${type}`)
+                : type === "rural"
+                  ? "Rural areas"
+                  : "Urban areas"}
             </button>
           ))}
         </div>
         {!hasAssembly ? (
           <p className="mt-1 text-xs text-slate-500">
-            Choose an assembly constituency to unlock rural and urban areas.
+            {t
+              ? t("geo.unlock")
+              : "Choose an assembly constituency to unlock rural and urban areas."}
           </p>
         ) : null}
       </div>
@@ -125,13 +141,14 @@ export default function GeoPicker({
         ? RURAL_LEVELS.map((lvl) => (
             <Field
               key={lvl.id}
-              label={lvl.label}
+              label={labelFor(lvl.id, lvl.label)}
               value={value[lvl.id] || ""}
               options={selectFor(lvl.id)}
               onChange={(id) => setField(lvl.id, id)}
               disabled={!value[lvl.parent]}
               allowEmpty
               required={requiredThrough === lvl.id}
+              t={t}
             />
           ))
         : null}
@@ -139,12 +156,19 @@ export default function GeoPicker({
         ? URBAN_LEVELS.map((lvl) => (
             <Field
               key={lvl.id}
-              label={lvl.label + (lvl.optional ? " (optional)" : "")}
+              label={
+                lvl.optional
+                  ? t
+                    ? t("geo.optional", { label: labelFor(lvl.id, lvl.label) })
+                    : `${lvl.label} (optional)`
+                  : labelFor(lvl.id, lvl.label)
+              }
               value={value[lvl.id] || ""}
               options={selectFor(lvl.id)}
               onChange={(id) => setField(lvl.id, id)}
               disabled={!value[lvl.parent]}
               allowEmpty
+              t={t}
             />
           ))
         : null}
@@ -160,6 +184,7 @@ function Field({
   disabled,
   allowEmpty = true,
   required,
+  t,
 }) {
   return (
     <label className="block">
@@ -174,7 +199,13 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
       >
         <option value="">
-          {allowEmpty ? "Any / not set" : "Select…"}
+          {allowEmpty
+            ? t
+              ? t("geo.any")
+              : "Any / not set"
+            : t
+              ? t("geo.select")
+              : "Select…"}
         </option>
         {options.map((o) => (
           <option key={o.id} value={o.id}>

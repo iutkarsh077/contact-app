@@ -6,24 +6,22 @@ import { formatPath } from "@/lib/geo";
 import { btnGhost, formatPhone } from "@/components/ui";
 
 export default function RequestsPage() {
-  const { state, setRequestStatus } = useStore();
+  const { state, setRequestStatus, t } = useStore();
 
   return (
     <div className="mx-auto max-w-4xl space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Locals request for MLA</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Development and issue requests from people in the constituency.
-          </p>
+          <h1 className="text-2xl font-semibold">{t("requests.title")}</h1>
+          <p className="mt-1 text-sm text-slate-600">{t("requests.lead")}</p>
         </div>
         <Link href="/requests/new" className="text-sm text-teal-800 underline">
-          Public request form
+          {t("requests.publicForm")}
         </Link>
       </div>
       <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
         {state.requests.length === 0 ? (
-          <li className="p-6 text-sm text-slate-500">No requests yet.</li>
+          <li className="p-6 text-sm text-slate-500">{t("requests.empty")}</li>
         ) : (
           state.requests.map((r) => (
             <li key={r.id} className="px-4 py-3">
@@ -33,14 +31,16 @@ export default function RequestsPage() {
                 {formatPath(state.geoNodes, r.geoPath)}
               </p>
               <p className="mt-2 text-sm">{r.issue}</p>
-              <p className="mt-1 text-xs uppercase text-slate-500">{r.status}</p>
+              <p className="mt-1 text-xs uppercase text-slate-500">
+                {t(`status.${r.status}`)}
+              </p>
               {r.status === "open" ? (
                 <button
                   type="button"
                   className={`${btnGhost} mt-2`}
                   onClick={() => setRequestStatus(r.id, "reviewed")}
                 >
-                  Mark reviewed
+                  {t("requests.markReviewed")}
                 </button>
               ) : null}
             </li>

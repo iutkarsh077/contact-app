@@ -7,7 +7,7 @@ import { areaName } from "@/lib/geo";
 import { btnGhost, btnPrimary, inputClass, labelClass } from "@/components/ui";
 
 export default function VisitsPage() {
-  const { state, addVisit, deleteVisit, inArea } = useStore();
+  const { state, addVisit, deleteVisit, inArea, t } = useStore();
   const [geoPath, setGeoPath] = useState({ lok_sabha: "ls-1", assembly: "ac-1" });
   const [date, setDate] = useState("");
   const [message, setMessage] = useState("");
@@ -33,7 +33,7 @@ export default function VisitsPage() {
     e.preventDefault();
     const areaId = deepest(geoPath);
     if (!areaId || !date || !message.trim()) {
-      setError("Choose an area, date, and message");
+      setError(t("visits.required"));
       return;
     }
     addVisit({ geoPath, areaId, date, message: message.trim() });
@@ -44,19 +44,16 @@ export default function VisitsPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold">Travel notifications</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Notify contacts and volunteers in an area when the MLA plans to visit.
-          In this POC, notices appear in the app (not SMS).
-        </p>
+        <h1 className="text-2xl font-semibold">{t("visits.title")}</h1>
+        <p className="mt-1 text-sm text-slate-600">{t("visits.lead")}</p>
       </header>
       <form
         onSubmit={onSubmit}
         className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
       >
-        <GeoPicker nodes={state.geoNodes} value={geoPath} onChange={setGeoPath} />
+        <GeoPicker nodes={state.geoNodes} value={geoPath} onChange={setGeoPath} t={t} />
         <label className="block">
-          <span className={labelClass}>Visit date</span>
+          <span className={labelClass}>{t("visits.date")}</span>
           <input
             type="date"
             className={inputClass}
@@ -65,7 +62,7 @@ export default function VisitsPage() {
           />
         </label>
         <label className="block">
-          <span className={labelClass}>Message</span>
+          <span className={labelClass}>{t("visits.message")}</span>
           <textarea
             className={inputClass}
             rows={3}
@@ -75,7 +72,7 @@ export default function VisitsPage() {
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <button type="submit" className={btnPrimary}>
-          Publish notice
+          {t("visits.publish")}
         </button>
       </form>
       <ul className="space-y-3">
@@ -89,14 +86,14 @@ export default function VisitsPage() {
               </p>
               <p className="mt-1 text-sm text-slate-700">{v.message}</p>
               <p className="mt-2 text-xs text-slate-500">
-                Reaches {n} contacts and {vol} volunteers in this area.
+                {t("visits.reaches", { contacts: n, volunteers: vol })}
               </p>
               <button
                 type="button"
                 className={`${btnGhost} mt-3`}
                 onClick={() => deleteVisit(v.id)}
               >
-                Remove
+                {t("visits.remove")}
               </button>
             </li>
           );

@@ -25,6 +25,7 @@ If you open the app on a second computer, that computer has an empty drawer. It 
 | Seed | The sample data in `src/data/seed.js` |
 | geoPath | Area ids on a record |
 | Role | `staff` or `public` |
+| Locale | UI language `en`, `hi`, or `te` |
 
 ## 3. What the state holds
 
@@ -41,7 +42,7 @@ state
 └── requests[]        local development / issue letters
 ```
 
-Role is not inside state. Role is a second value next to state.
+Role is not inside state. Role is a second value next to state. Locale is also next to state. Locale is not in the contact JSON.
 
 ## 4. Start-up flow
 
@@ -70,6 +71,10 @@ useEffect runs in the browser
         ├─ Read localStorage key  contact-app-poc-role
         │     staff or public → set role
         │     other           → keep staff
+        │
+        ├─ Read localStorage key  contact-app-poc-locale
+        │     en, hi, or te → set locale
+        │     other         → keep en
         │
         └─ setReady(true)
         │
@@ -257,7 +262,7 @@ UI shows an <a download> link
 layout.js
   AppProviders
     StoreProvider     ← all data
-      AppShell        ← role, nav, block
+      AppShell        ← role, locale, nav, block
         page.js       ← dashboard (read)
         /contacts     ← search (read) + pin (write)
         /contacts/new ← upsertContact

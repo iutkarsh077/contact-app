@@ -6,7 +6,7 @@ A component is a reusable tool. If two pages need the same tool, put it in `src/
 
 ## You must
 
-1. Use a default export for screen components: `GeoPicker`, `ContactForm`, `AppShell`, `StatCard`.
+1. Use a default export for screen components: `GeoPicker`, `ContactForm`, `AppShell`, `StatCard`. Keep AppShell as the only shell. Phone chips and the `md` sidebar must use the same nav lists.
 2. Put shared class strings and format helpers in `src/components/ui.js` as named exports.
 3. Pass data in. Do not let `ContactForm` or `GeoPicker` call `useStore` unless you have a strong reason. Today they receive `nodes` and callbacks.
 4. Keep GeoPicker cascading:
@@ -17,6 +17,7 @@ A component is a reusable tool. If two pages need the same tool, put it in `src/
 
 5. Default new geoPath objects to `{ lok_sabha: "ls-1", assembly: "ac-1" }` when the form is not a filter.
 6. Filter pickers may use `allowEmpty`.
+7. Pass optional `t` into `GeoPicker` and `ContactForm`. If `t` is missing, keep the English labels.
 
 ## You must not
 

@@ -14,8 +14,12 @@ The screen must look like one product. Use the same colors, the same buttons, an
 6. Show empty lists with a short sentence, not a blank card.
 7. Show travel notices with amber (`border-amber-200 bg-amber-50`).
 8. Show success after public submit with teal-50 boxes, same as volunteer and request pages.
-9. Keep the staff sidebar dark (`bg-slate-900`) in `AppShell`.
+9. Keep the staff sidebar dark (`bg-slate-900`) in `AppShell`. Show the sidebar from `md` (768px). On a phone, show the same nav as chips. Do not add a drawer.
 10. Keep the public/staff switch in the header.
+11. Keep the language switch in the AppShell header next to staff/public.
+12. Make the phone layout first. Default Tailwind classes are for a narrow screen. Add `md:` for the sidebar and wide layout.
+13. Keep header and chips in one sticky white block (`sticky top-0 z-10`). The active chip uses `bg-teal-800 text-white`.
+14. Do not set `overflow-x: hidden` on `body`. That can clip native select lists. Scroll chips with `overflow-x-auto` only.
 
 ## Forms
 
@@ -30,4 +34,4 @@ Appointment files must stay under 400 KB. Use `fileToDocument`. Do not upload to
 
 ## Copy
 
-Write UI strings in short plain English. Match goal.md words: contact, volunteer, appointment, area, travel notice, request.
+Write UI chrome through `t("key")` from `useStore()`. Keep English, Hindi, and Telugu keys in `src/i18n`. Do not translate user data (names, notes, messages, area names). Match goal.md words: contact, volunteer, appointment, area, travel notice, request.
