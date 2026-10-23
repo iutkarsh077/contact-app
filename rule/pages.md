@@ -20,8 +20,10 @@ A page is a room. The store is the warehouse. The page asks the warehouse. The p
 ## Public vs staff
 
 - Public write pages: `/volunteers/register`, `/requests/new`.
+- Unauthenticated entry: `/signup`, `/login`.
+- Administrator console: `/admin`.
 - Staff list pages read the same arrays.
-- Do not add a second public path without updating `isPublicAllowed` in `AppShell.js`.
+- Do not add a public path without updating `isPublicAllowed` in `AppShell.js`.
 
 ## Filter pages
 

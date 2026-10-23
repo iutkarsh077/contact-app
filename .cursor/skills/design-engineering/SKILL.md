@@ -34,7 +34,7 @@ Also follow `rule/ui.md` and `rule/components.md`.
 - Success (public submit): `rounded-xl border border-teal-200 bg-teal-50 p-6` with `text-teal-950` / `text-teal-900`.
 - Notices / blocked public route: amber `border-amber-200 bg-amber-50`.
 - Phone first. Default classes fit a narrow screen. From `md`, show the dark sidebar (`bg-slate-900`) and hide chips (`md:hidden`).
-- Shell: sticky white header plus chips (`sticky top-0 z-10`). Active chip and sidebar link use `bg-teal-800 text-white`. Language pills and staff/public pills stay in the header.
+- Shell: sticky white header plus chips (`sticky top-0 z-10`). Active chip and sidebar link use `bg-teal-800 text-white`. Role comes from signup session; header shows user name and Sign out (and staff badge for verified staff), not role pills. Language pills stay in the header.
 - Change `AppShell` only when the task is layout or nav. Keep `STAFF_NAV`, `PUBLIC_NAV`, and `isPublicAllowed`. Do not add a drawer.
 
 ## Interaction and states
@@ -47,7 +47,7 @@ Every new or changed surface must have:
 - Disabled (GeoPicker rural/urban until assembly is set)
 - Staff vs public, if the route exists in both worlds
 
-Pill buttons (language, role): selected `bg-teal-800 text-white`; idle `border border-slate-300 text-slate-600`; shape `rounded-full px-3 py-1 text-xs`.
+Pill buttons (language): selected `bg-teal-800 text-white`; idle `border border-slate-300 text-slate-600`; shape `rounded-full px-3 py-1 text-xs`.
 
 Links that look like cards: `hover:border-teal-700`.
 

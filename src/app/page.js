@@ -60,25 +60,30 @@ export default function HomePage() {
         <p className="mt-1 text-sm text-slate-600">{t("home.staffLead")}</p>
       </header>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label={t("home.contacts")}
-          value={contacts.length}
-          hint={t("home.oneStore")}
-        />
-        <StatCard
-          label={t("home.volunteers")}
-          value={volunteers.length}
-          hint={t("home.pendingCount", { count: pendingVol })}
-        />
-        <StatCard
-          label={t("home.appointments")}
-          value={appointments.length}
-          hint={t("home.meetingsHint")}
-        />
-        <StatCard
-          label={t("home.openRequests")}
-          value={requests.filter((r) => r.status === "open").length}
-        />
+        <Link href={"/contacts"}>
+          <StatCard
+            label={t("home.contacts")}
+            value={contacts.length}
+            hint={t("home.oneStore")}
+          /></Link>
+        <Link href={"/volunteers"}>
+          <StatCard
+            label={t("home.volunteers")}
+            value={volunteers.length}
+            hint={t("home.pendingCount", { count: pendingVol })}
+          /></Link>
+        <Link href={"/appointments"}>
+          <StatCard
+            label={t("home.appointments")}
+            value={appointments.length}
+            hint={t("home.meetingsHint")}
+          /></Link>
+        <Link href={"/requests"} className="h-full">
+          <StatCard
+            label={t("home.openRequests")}
+            value={requests.filter((r) => r.status === "open").length}
+          />
+        </Link>
       </div>
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">

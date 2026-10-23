@@ -11,6 +11,7 @@ export default function GeoPicker({
   showLokSabha = true,
   allowEmpty = false,
   requiredThrough = null,
+  stopAt = null,
   t,
 }) {
   function labelFor(levelId, fallback) {
@@ -102,76 +103,81 @@ export default function GeoPicker({
         onChange={(id) => setField("assembly", id)}
         disabled={!value.lok_sabha}
         allowEmpty={allowEmpty}
+        required={requiredThrough === "assembly"}
         t={t}
       />
-      <div className="sm:col-span-2">
-        <span className={labelClass}>
-          {t ? t("geo.areaType") : "Area type"}
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {["rural", "urban"].map((type) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setAreaType(type)}
-              disabled={!hasAssembly}
-              className={`rounded-full px-3 py-1 text-sm ${
-                areaType === type
-                  ? "bg-teal-800 text-white"
-                  : "border border-slate-300 text-slate-700"
-              } disabled:opacity-40`}
-            >
-              {t
-                ? t(`geo.${type}`)
-                : type === "rural"
-                  ? "Rural areas"
-                  : "Urban areas"}
-            </button>
-          ))}
-        </div>
-        {!hasAssembly ? (
-          <p className="mt-1 text-xs text-slate-500">
-            {t
-              ? t("geo.unlock")
-              : "Choose an assembly constituency to unlock rural and urban areas."}
-          </p>
-        ) : null}
-      </div>
-      {ruralReady
-        ? RURAL_LEVELS.map((lvl) => (
-            <Field
-              key={lvl.id}
-              label={labelFor(lvl.id, lvl.label)}
-              value={value[lvl.id] || ""}
-              options={selectFor(lvl.id)}
-              onChange={(id) => setField(lvl.id, id)}
-              disabled={!value[lvl.parent]}
-              allowEmpty
-              required={requiredThrough === lvl.id}
-              t={t}
-            />
-          ))
-        : null}
-      {urbanReady
-        ? URBAN_LEVELS.map((lvl) => (
-            <Field
-              key={lvl.id}
-              label={
-                lvl.optional
-                  ? t
-                    ? t("geo.optional", { label: labelFor(lvl.id, lvl.label) })
-                    : `${lvl.label} (optional)`
-                  : labelFor(lvl.id, lvl.label)
-              }
-              value={value[lvl.id] || ""}
-              options={selectFor(lvl.id)}
-              onChange={(id) => setField(lvl.id, id)}
-              disabled={!value[lvl.parent]}
-              allowEmpty
-              t={t}
-            />
-          ))
-        : null}
+      {stopAt !== "assembly" ? (
+        <>
+          <div className="sm:col-span-2">
+            <span className={labelClass}>
+              {t ? t("geo.areaType") : "Area type"}
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {["rural", "urban"].map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setAreaType(type)}
+                  disabled={!hasAssembly}
+                  className={`rounded-full px-3 py-1 text-sm ${
+                    areaType === type
+                      ? "bg-teal-800 text-white"
+                      : "border border-slate-300 text-slate-700"
+                  } disabled:opacity-40`}
+                >
+                  {t
+                    ? t(`geo.${type}`)
+                    : type === "rural"
+                      ? "Rural areas"
+                      : "Urban areas"}
+                </button>
+              ))}
+            </div>
+            {!hasAssembly ? (
+              <p className="mt-1 text-xs text-slate-500">
+                {t
+                  ? t("geo.unlock")
+                  : "Choose an assembly constituency to unlock rural and urban areas."}
+              </p>
+            ) : null}
+          </div>
+          {ruralReady
+            ? RURAL_LEVELS.map((lvl) => (
+                <Field
+                  key={lvl.id}
+                  label={labelFor(lvl.id, lvl.label)}
+                  value={value[lvl.id] || ""}
+                  options={selectFor(lvl.id)}
+                  onChange={(id) => setField(lvl.id, id)}
+                  disabled={!value[lvl.parent]}
+                  allowEmpty
+                  required={requiredThrough === lvl.id}
+                  t={t}
+                />
+              ))
+            : null}
+          {urbanReady
+            ? URBAN_LEVELS.map((lvl) => (
+                <Field
+                  key={lvl.id}
+                  label={
+                    lvl.optional
+                      ? t
+                        ? t("geo.optional", { label: labelFor(lvl.id, lvl.label) })
+                        : `${lvl.label} (optional)`
+                      : labelFor(lvl.id, lvl.label)
+                  }
+                  value={value[lvl.id] || ""}
+                  options={selectFor(lvl.id)}
+                  onChange={(id) => setField(lvl.id, id)}
+                  disabled={!value[lvl.parent]}
+                  allowEmpty
+                  t={t}
+                />
+              ))
+            : null}
+        </>
+      ) : null}
     </div>
   );
 }
