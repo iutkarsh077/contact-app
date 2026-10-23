@@ -75,9 +75,9 @@ export default function AdminPage() {
             />
           </label>
 
-          <div className="rounded-lg border border-teal-200 bg-teal-50/70 p-3 text-xs text-teal-900">
+          {/* <div className="rounded-lg border border-teal-200 bg-teal-50/70 p-3 text-xs text-teal-900">
             {t("admin.pocNote")}
-          </div>
+          </div> */}
 
           <div className="flex gap-2 pt-2">
             <Link href="/signup" className={`flex-1 text-center ${btnGhost}`}>

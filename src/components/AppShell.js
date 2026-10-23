@@ -336,9 +336,9 @@ export default function AppShell({ children }) {
             );
           })}
         </nav>
-        <p className="px-4 pb-4 text-[11px] leading-4 text-slate-500">
+        {/* <p className="px-4 pb-4 text-[11px] leading-4 text-slate-500">
           {t("shell.pocNote")}
-        </p>
+        </p> */}
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="fixed left-0 right-0 top-0 z-20 bg-white md:left-60">
@@ -416,9 +416,9 @@ export default function AppShell({ children }) {
               );
             })}
           </nav>
-          <p className="border-b border-slate-200 px-4 py-2 text-[11px] leading-4 text-slate-500 md:hidden">
+          {/* <p className="border-b border-slate-200 px-4 py-2 text-[11px] leading-4 text-slate-500 md:hidden">
             {t("shell.pocNote")}
-          </p>
+          </p> */}
         </div>
         <main className="flex-1 p-4 pb-8 md:p-6">
           {blocked ? (
