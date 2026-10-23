@@ -8,13 +8,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), var(--font-noto-deva), var(--font-noto-telugu);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-poppins), var(--font-noto-deva), var(--font-noto-telugu), sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), var(--font-noto-deva), var(--font-noto-telugu),
-    Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), var(--font-noto-deva), var(--font-noto-telugu),
+    sans-serif;
 }

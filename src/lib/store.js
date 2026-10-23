@@ -7,7 +7,12 @@ import { isLocale, translate } from "@/i18n";
 
 export const STORAGE_KEY = "contact-app-poc-v1";
 export const ROLE_KEY = "contact-app-poc-role";
+export const SESSION_KEY = "contact-app-poc-session";
+export const ADMIN_SESSION_KEY = "contact-app-poc-admin";
 export const LOCALE_KEY = "contact-app-poc-locale";
+
+export const POC_ADMIN_EMAIL = "admin@poc.local";
+export const POC_ADMIN_PASSWORD = "admin";
 
 function uid() {
   return crypto.randomUUID();
@@ -23,7 +28,7 @@ function loadState() {
       return seed;
     }
     const parsed = JSON.parse(raw);
-    return { ...createSeedState(), ...parsed };
+    return { ...createSeedState(), ...parsed, accounts: parsed.accounts || [] };
   } catch {
     return createSeedState();
   }
@@ -37,14 +42,30 @@ const StoreContext = createContext(null);
 
 export function StoreProvider({ children }) {
   const [state, setState] = useState(() => createSeedState());
-  const [role, setRoleState] = useState("staff");
+  const [sessionAccountId, setSessionAccountId] = useState(null);
+  const [adminSession, setAdminSession] = useState(null);
   const [locale, setLocaleState] = useState("en");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setState(loadState());
-    const saved = localStorage.getItem(ROLE_KEY);
-    if (saved === "public" || saved === "staff") setRoleState(saved);
+
+    const savedSession = localStorage.getItem(SESSION_KEY);
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        if (parsed?.accountId) setSessionAccountId(parsed.accountId);
+      } catch {}
+    }
+
+    const savedAdmin = localStorage.getItem(ADMIN_SESSION_KEY);
+    if (savedAdmin) {
+      try {
+        const parsed = JSON.parse(savedAdmin);
+        if (parsed?.email) setAdminSession(parsed);
+      } catch {}
+    }
+
     const savedLocale = localStorage.getItem(LOCALE_KEY);
     if (isLocale(savedLocale)) setLocaleState(savedLocale);
     setReady(true);
@@ -53,6 +74,13 @@ export function StoreProvider({ children }) {
   useEffect(() => {
     if (ready) persist(state);
   }, [state, ready]);
+
+  const session = useMemo(() => {
+    if (!state?.accounts || !sessionAccountId) return null;
+    return state.accounts.find((a) => a.id === sessionAccountId) || null;
+  }, [state?.accounts, sessionAccountId]);
+
+  const role = session?.role || null;
 
   const api = useMemo(() => {
     if (!state) return null;
@@ -66,19 +94,90 @@ export function StoreProvider({ children }) {
 
     return {
       state,
+      session,
+      adminSession,
       role,
       locale,
+      ready,
       t: (key, vars) => translate(locale, key, vars),
-      setRole: (next) => {
-        setRoleState(next);
-        localStorage.setItem(ROLE_KEY, next);
+      signUp: ({ role, name, phone, geoPath, termStart, termEnd }) => {
+        const id = uid();
+        const account = {
+          id,
+          createdAt: new Date().toISOString(),
+          role,
+          name,
+          phone,
+          geoPath,
+          ...(role === "staff"
+            ? {
+                termStart,
+                termEnd,
+                status: "verified",
+              }
+            : {
+                status: "verified",
+              }),
+        };
+        update((s) => ({
+          ...s,
+          accounts: [...(s.accounts || []), account],
+        }));
+        setSessionAccountId(id);
+        localStorage.setItem(SESSION_KEY, JSON.stringify({ accountId: id }));
+        return account;
+      },
+      login: (phone) => {
+        const digits = String(phone).replace(/\D/g, "");
+        const account = state.accounts?.find((a) => a.phone === digits);
+        if (!account) return null;
+        setSessionAccountId(account.id);
+        localStorage.setItem(SESSION_KEY, JSON.stringify({ accountId: account.id }));
+        return account;
+      },
+      findAccountByPhone: (phone) => {
+        const digits = String(phone).replace(/\D/g, "");
+        return state.accounts?.find((a) => a.phone === digits) || null;
+      },
+      signOut: () => {
+        setSessionAccountId(null);
+        localStorage.removeItem(SESSION_KEY);
+      },
+      adminLogin: (email, password) => {
+        if (
+          email &&
+          email.trim().toLowerCase() === POC_ADMIN_EMAIL.toLowerCase() &&
+          password === POC_ADMIN_PASSWORD
+        ) {
+          const sessionObj = { email: POC_ADMIN_EMAIL };
+          setAdminSession(sessionObj);
+          localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(sessionObj));
+          return true;
+        }
+        return false;
+      },
+      adminLogout: () => {
+        setAdminSession(null);
+        localStorage.removeItem(ADMIN_SESSION_KEY);
+      },
+      verifyAccount: (id) => {
+        update((s) => ({
+          ...s,
+          accounts: (s.accounts || []).map((acc) =>
+            acc.id === id ? { ...acc, status: "verified" } : acc,
+          ),
+        }));
       },
       setLocale: (next) => {
         if (!isLocale(next)) return;
         setLocaleState(next);
         localStorage.setItem(LOCALE_KEY, next);
       },
-      reset: () => setState(createSeedState()),
+      reset: () =>
+        setState((prev) => ({
+          ...createSeedState(),
+          accounts: prev.accounts || [],
+        })),
       upsertContact: (contact) => {
         const record = {
           pinned: false,
@@ -209,7 +308,7 @@ export function StoreProvider({ children }) {
       inArea: (geoPath, areaId) =>
         contactInArea(state.geoNodes, geoPath, areaId),
     };
-  }, [state, role, locale]);
+  }, [state, session, adminSession, role, locale, ready]);
 
   return <StoreContext.Provider value={api}>{children}</StoreContext.Provider>;
 }

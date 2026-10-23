@@ -15,8 +15,8 @@ The screen must look like one product. Use the same colors, the same buttons, an
 7. Show travel notices with amber (`border-amber-200 bg-amber-50`).
 8. Show success after public submit with teal-50 boxes, same as volunteer and request pages.
 9. Keep the staff sidebar dark (`bg-slate-900`) in `AppShell`. Show the sidebar from `md` (768px). On a phone, show the same nav as chips. Do not add a drawer.
-10. Keep the public/staff switch in the header.
-11. Keep the language switch in the AppShell header next to staff/public.
+10. Show the signed-in user's name and Sign out in the header. Show a staff badge for verified staff. Do not use a header staff/public role switch; role comes from signup session.
+11. Keep the language switch in the AppShell header next to the user name and sign out.
 12. Make the phone layout first. Default Tailwind classes are for a narrow screen. Add `md:` for the sidebar and wide layout.
 13. Keep header and chips in one sticky white block (`sticky top-0 z-10`). The active chip uses `bg-teal-800 text-white`.
 14. Do not set `overflow-x: hidden` on `body`. That can clip native select lists. Scroll chips with `overflow-x-auto` only.

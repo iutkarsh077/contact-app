@@ -25,6 +25,9 @@ If you open the app on a second computer, that computer has an empty drawer. It 
 | Seed | The sample data in `src/data/seed.js` |
 | geoPath | Area ids on a record |
 | Role | `staff` or `public` |
+| Account | User record in `accounts[]` |
+| Session | Active account id in `contact-app-poc-session` |
+| Admin session | Signed-in admin email in `contact-app-poc-admin` |
 | Locale | UI language `en`, `hi`, or `te` |
 
 ## 3. What the state holds
@@ -39,10 +42,11 @@ state
 ├── appointments[]    meetings, optional contactId + document
 ├── volunteers[]      public sign-ups
 ├── visits[]          MLA travel notices
-└── requests[]        local development / issue letters
+├── requests[]        local development / issue letters
+└── accounts[]        signup accounts (staff and public)
 ```
 
-Role is not inside state. Role is a second value next to state. Locale is also next to state. Locale is not in the contact JSON.
+Session and admin session are kept in separate `localStorage` keys outside `STORAGE_KEY`. Role is derived from `session.role`. Locale is also next to state.
 
 ## 4. Start-up flow
 
@@ -65,12 +69,16 @@ useEffect runs in the browser
         │
         ├─ Read localStorage key  contact-app-poc-v1
         │     missing  → write seed, use seed
-        │     present  → JSON.parse, merge onto seed
+        │     present  → JSON.parse, merge onto seed (including accounts)
         │     error    → use seed
         │
-        ├─ Read localStorage key  contact-app-poc-role
-        │     staff or public → set role
-        │     other           → keep staff
+        ├─ Read localStorage key  contact-app-poc-session
+        │     present  → set sessionAccountId, resolve session from accounts[]
+        │     missing  → no active session
+        │
+        ├─ Read localStorage key  contact-app-poc-admin
+        │     present  → set adminSession ({ email })
+        │     missing  → no active admin session
         │
         ├─ Read localStorage key  contact-app-poc-locale
         │     en, hi, or te → set locale
@@ -85,7 +93,12 @@ Second useEffect
            writes JSON to contact-app-poc-v1
 ```
 
-`AppProviders` then wraps `AppShell`. `AppShell` reads `role` and shows the menu. The route page reads `useStore()`.
+`AppProviders` then wraps `AppShell`. `AppShell` inspects session state:
+- If unauthenticated and not on `/signup` or `/admin`: redirects to `/signup`.
+- If staff account is pending verification: displays waiting screen.
+- If verified staff: displays `STAFF_NAV` and staff desk.
+- If public: displays `PUBLIC_NAV` and public home.
+- Header shows user name, sign out, and language buttons.
 
 ## 5. Write flow (any create or update)
 

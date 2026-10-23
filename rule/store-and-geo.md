@@ -15,7 +15,7 @@ You must:
 5. Wait for `ready` before persist. This avoids writing empty seed over saved data during hydrate.
 6. Export `useStore`. Throw if a component is outside `StoreProvider`.
 7. Keep `inArea` as a wrapper around `contactInArea(state.geoNodes, geoPath, areaId)`.
-8. Keep `locale` next to `role`. Persist it on `contact-app-poc-locale`. Do not put locale inside `STORAGE_KEY` JSON. `reset()` must not clear locale.
+8. Keep `locale`, `session` (`contact-app-poc-session`), and `adminSession` (`contact-app-poc-admin`) outside `STORAGE_KEY` JSON. `reset()` must not clear session, admin session, or locale. Role is derived from `session.role`. Accounts live in `state.accounts`.
 
 New entity rules:
 
@@ -35,5 +35,6 @@ You must:
 3. Use `descendantIds` for “this area and below”.
 4. Use `formatPath` to show a geoPath as text.
 5. Add sample nodes in `seed.js` if you add a level that the UI can select.
+6. Support `stopAt="assembly"` in `GeoPicker` when only Lok Sabha and Assembly selection is needed (e.g. signup).
 
 You must not store area as a single string on contacts. Use the geoPath object.
