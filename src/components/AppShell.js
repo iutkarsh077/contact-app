@@ -37,6 +37,28 @@ function isActivePath(pathname, href) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
+function localeClass(active) {
+  return `rounded-full px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40 ${
+    active
+      ? "bg-teal-800 text-white"
+      : "border border-slate-300 text-slate-600 hover:border-teal-700"
+  }`;
+}
+
+function sidebarLinkClass(active) {
+  return `rounded-lg px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/50 ${
+    active ? "bg-teal-800 text-white" : "text-slate-300 hover:bg-slate-800"
+  }`;
+}
+
+function chipClass(active) {
+  return `shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40 ${
+    active
+      ? "bg-teal-800 text-white"
+      : "border border-slate-200 text-slate-700"
+  }`;
+}
+
 export default function AppShell({ children }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -123,12 +145,9 @@ export default function AppShell({ children }) {
                 <button
                   key={item.id}
                   type="button"
+                  aria-pressed={locale === item.id}
                   onClick={() => setLocale(item.id)}
-                  className={`rounded-full px-2.5 py-1 text-xs ${
-                    locale === item.id
-                      ? "bg-teal-800 text-white"
-                      : "border border-slate-300 text-slate-600"
-                  }`}
+                  className={localeClass(locale === item.id)}
                 >
                   {t(`lang.${item.id}`)}
                 </button>
@@ -177,12 +196,9 @@ export default function AppShell({ children }) {
                 <button
                   key={item.id}
                   type="button"
+                  aria-pressed={locale === item.id}
                   onClick={() => setLocale(item.id)}
-                  className={`rounded-full px-2.5 py-1 text-xs ${
-                    locale === item.id
-                      ? "bg-teal-800 text-white"
-                      : "border border-slate-300 text-slate-600"
-                  }`}
+                  className={localeClass(locale === item.id)}
                 >
                   {t(`lang.${item.id}`)}
                 </button>
@@ -248,12 +264,9 @@ export default function AppShell({ children }) {
                 <button
                   key={item.id}
                   type="button"
+                  aria-pressed={locale === item.id}
                   onClick={() => setLocale(item.id)}
-                  className={`rounded-full px-2.5 py-1 text-xs ${
-                    locale === item.id
-                      ? "bg-teal-800 text-white"
-                      : "border border-slate-300 text-slate-600"
-                  }`}
+                  className={localeClass(locale === item.id)}
                 >
                   {t(`lang.${item.id}`)}
                 </button>
@@ -311,7 +324,7 @@ export default function AppShell({ children }) {
   // Verified Staff and Public Session Views
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900">
-      <aside className="hidden sticky top-0 h-screen w-60 shrink-0 flex-col overflow-hidden bg-slate-900 text-slate-100 md:flex">
+      <aside className="hidden sticky top-0 h-screen w-60 shrink-0 flex-col overflow-y-auto bg-slate-900 text-slate-100 md:flex">
         <div className="border-b border-slate-800 px-4 py-5">
           <p className="text-xs uppercase tracking-wider text-teal-300">
             {t("shell.office")}
@@ -325,11 +338,8 @@ export default function AppShell({ children }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-lg px-3 py-2 text-sm ${
-                  active
-                    ? "bg-teal-800 text-white"
-                    : "text-slate-300 hover:bg-slate-800"
-                }`}
+                aria-current={active ? "page" : undefined}
+                className={sidebarLinkClass(active)}
               >
                 {t(item.labelKey)}
               </Link>
@@ -342,9 +352,9 @@ export default function AppShell({ children }) {
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="sticky top-0 z-10 bg-white">
-          <header className="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
             <p className="font-semibold md:hidden">{pageTitle}</p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex min-w-0 flex-wrap items-center gap-3 md:ml-auto">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="hidden text-xs text-slate-500 sm:inline">
                   {t("shell.language")}
@@ -353,12 +363,9 @@ export default function AppShell({ children }) {
                   <button
                     key={item.id}
                     type="button"
+                    aria-pressed={locale === item.id}
                     onClick={() => setLocale(item.id)}
-                    className={`rounded-full px-3 py-1 text-xs ${
-                      locale === item.id
-                        ? "bg-teal-800 text-white"
-                        : "border border-slate-300 text-slate-600"
-                    }`}
+                    className={localeClass(locale === item.id)}
                   >
                     {t(`lang.${item.id}`)}
                   </button>
@@ -405,11 +412,8 @@ export default function AppShell({ children }) {
                   key={item.href}
                   href={item.href}
                   data-active={active ? "true" : undefined}
-                  className={`shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm ${
-                    active
-                      ? "bg-teal-800 text-white"
-                      : "border border-slate-200 text-slate-700"
-                  }`}
+                  aria-current={active ? "page" : undefined}
+                  className={chipClass(active)}
                 >
                   {t(item.labelKey)}
                 </Link>

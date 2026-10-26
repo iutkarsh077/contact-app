@@ -57,6 +57,7 @@ export default {
     appointments: "Appointments",
     meetingsHint: "Meetings & follow-ups",
     openRequests: "Open requests",
+    openHint: "Waiting for staff",
     travel: "Travel notifications",
     noVisits: "No upcoming MLA visits.",
     visitLine: "MLA visit · {date} · {area}",

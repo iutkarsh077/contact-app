@@ -5,7 +5,7 @@ import Link from "next/link";
 import StatCard from "@/components/StatCard";
 import { useStore } from "@/lib/store";
 import { areaName, formatPath } from "@/lib/geo";
-import { formatPhone } from "@/components/ui";
+import { cardLinkClass, formatPhone } from "@/components/ui";
 
 export default function HomePage() {
   const { state, role, inArea, t } = useStore();
@@ -25,14 +25,14 @@ export default function HomePage() {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <header>
-          <h1 className="text-2xl font-semibold">{t("home.publicTitle")}</h1>
+          <h1 className="text-2xl font-semibold text-pretty">{t("home.publicTitle")}</h1>
           <p className="mt-1 text-sm text-slate-600">{t("home.publicLead")}</p>
         </header>
         <VisitList visits={upcomingVisits} geoNodes={geoNodes} t={t} />
         <div className="grid gap-3 sm:grid-cols-2">
           <Link
             href="/volunteers/register"
-            className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700"
+            className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
           >
             <p className="font-medium">{t("home.volunteerCard")}</p>
             <p className="mt-1 text-sm text-slate-600">
@@ -41,7 +41,7 @@ export default function HomePage() {
           </Link>
           <Link
             href="/requests/new"
-            className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700"
+            className="rounded-xl border border-slate-200 bg-white p-4 hover:border-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
           >
             <p className="font-medium">{t("home.requestCard")}</p>
             <p className="mt-1 text-sm text-slate-600">
@@ -56,32 +56,36 @@ export default function HomePage() {
   return (
       <div className="w-full space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold">{t("home.staffTitle")}</h1>
+        <h1 className="text-2xl font-semibold text-pretty">{t("home.staffTitle")}</h1>
         <p className="mt-1 text-sm text-slate-600">{t("home.staffLead")}</p>
       </header>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Link href={"/contacts"}>
+        <Link href="/contacts" className={cardLinkClass}>
           <StatCard
             label={t("home.contacts")}
             value={contacts.length}
             hint={t("home.oneStore")}
-          /></Link>
-        <Link href={"/volunteers"}>
+          />
+        </Link>
+        <Link href="/volunteers" className={cardLinkClass}>
           <StatCard
             label={t("home.volunteers")}
             value={volunteers.length}
             hint={t("home.pendingCount", { count: pendingVol })}
-          /></Link>
-        <Link href={"/appointments"}>
+          />
+        </Link>
+        <Link href="/appointments" className={cardLinkClass}>
           <StatCard
             label={t("home.appointments")}
             value={appointments.length}
             hint={t("home.meetingsHint")}
-          /></Link>
-        <Link href={"/requests"} className="h-full">
+          />
+        </Link>
+        <Link href="/requests" className={cardLinkClass}>
           <StatCard
             label={t("home.openRequests")}
             value={requests.filter((r) => r.status === "open").length}
+            hint={t("home.openHint")}
           />
         </Link>
       </div>
@@ -124,17 +128,23 @@ export default function HomePage() {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
             {t("home.pinned")}
           </h2>
-          <Link href="/contacts" className="text-sm text-teal-800 underline">
+          <Link
+            href="/contacts"
+            className="text-sm text-teal-800 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
+          >
             {t("home.openContacts")}
           </Link>
         </div>
         {pinned.length === 0 ? (
           <p className="text-sm text-slate-500">{t("home.noPinned")}</p>
         ) : (
-          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
             {pinned.map((c) => (
               <li key={c.id} className="px-4 py-3">
-                <Link href={`/contacts/${c.id}`} className="font-medium hover:underline">
+                <Link
+                  href={`/contacts/${c.id}`}
+                  className="font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
+                >
                   {c.name}
                 </Link>
                 <p className="text-sm text-slate-600">

@@ -57,6 +57,7 @@ export default {
     appointments: "అపాయింట్‌మెంట్లు",
     meetingsHint: "సమావేశాలు మరియు ఫాలో-అప్‌లు",
     openRequests: "తెరిచిన అభ్యర్థనలు",
+    openHint: "స్టాఫ్ కోసం వేచి",
     travel: "పర్యటన నోటీసులు",
     noVisits: "రాబోయే ఎమ్మెల్యే పర్యటనలు లేవు.",
     visitLine: "ఎమ్మెల్యే పర్యటన · {date} · {area}",

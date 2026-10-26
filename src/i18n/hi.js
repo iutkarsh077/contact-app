@@ -57,6 +57,7 @@ export default {
     appointments: "नियुक्तियाँ",
     meetingsHint: "बैठकें और फॉलो-अप",
     openRequests: "खुले अनुरोध",
+    openHint: "स्टाफ की प्रतीक्षा",
     travel: "यात्रा सूचना",
     noVisits: "कोई आगामी विधायक यात्रा नहीं।",
     visitLine: "विधायक यात्रा · {date} · {area}",
