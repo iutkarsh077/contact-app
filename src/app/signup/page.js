@@ -238,7 +238,7 @@ export default function SignupPage() {
                 nodes={state.geoNodes}
                 value={geoPath}
                 onChange={setGeoPath}
-                stopAt="assembly"
+                stopAt={role === "staff" ? "assembly" : null}
                 requiredThrough="assembly"
                 t={t}
               />

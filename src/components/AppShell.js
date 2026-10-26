@@ -311,7 +311,7 @@ export default function AppShell({ children }) {
   // Verified Staff and Public Session Views
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900">
-      <aside className="hidden fixed left-0 top-0 h-screen w-60 shrink-0 flex-col overflow-hidden bg-slate-900 text-slate-100 md:flex">
+      <aside className="hidden sticky top-0 h-screen w-60 shrink-0 flex-col overflow-hidden bg-slate-900 text-slate-100 md:flex">
         <div className="border-b border-slate-800 px-4 py-5">
           <p className="text-xs uppercase tracking-wider text-teal-300">
             {t("shell.office")}
@@ -341,7 +341,7 @@ export default function AppShell({ children }) {
         </p> */}
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="fixed left-0 right-0 top-0 z-20 bg-white md:left-60">
+        <div className="sticky top-0 z-10 bg-white">
           <header className="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <p className="font-semibold md:hidden">{pageTitle}</p>
             <div className="flex flex-wrap items-center gap-3">

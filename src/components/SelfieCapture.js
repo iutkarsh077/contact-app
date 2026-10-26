@@ -199,12 +199,10 @@ export default function SelfieCapture({ t, photo, onPhotoChange }) {
         </span>
       </div>
 
-      {/* VIEW 1: Captured Selfie Result */}
       {currentPhoto ? (
         <div className="rounded-xl border border-teal-200 bg-teal-50/50 p-4 transition shadow-sm">
           <div className="flex items-center gap-4">
             <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl border-2 border-teal-700 bg-slate-900 shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={currentPhoto}
                 alt="Captured selfie"
@@ -298,7 +296,6 @@ export default function SelfieCapture({ t, photo, onPhotoChange }) {
               style={{ transform: "scaleX(-1)" }}
             />
 
-            {/* Shutter flash overlay */}
             {isFlashing && (
               <div className="absolute inset-0 bg-white transition-opacity duration-150" />
             )}

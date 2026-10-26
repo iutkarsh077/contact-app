@@ -14,9 +14,7 @@ export default function AppProviders({ children }) {
           </div>
         }
       >
-        <AppShell>
-          <main className="mt-16 ml-10">{children}</main>
-        </AppShell>
+        <AppShell>{children}</AppShell>
       </Suspense>
     </StoreProvider>
   );

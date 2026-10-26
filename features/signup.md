@@ -14,7 +14,7 @@ This is a proof of concept (POC). There is no server. The app does **not send SM
 
 - It asks all new users to sign up at `/signup`.
 - It lets users choose one of two roles: **Staff** or **Public**.
-- It asks for name, 10-digit phone, and assembly constituency.
+- It asks for name, 10-digit phone, and assembly constituency. Public users can also select an area type and the available rural or urban geography fields beneath it.
 - For staff, it also asks for official term start date and term end date.
 - It shows a 6-digit POC code on screen. The user types this code to confirm their phone.
 - Wrong code shows an error and does not create an account.
@@ -29,7 +29,8 @@ This is a proof of concept (POC). There is no server. The app does **not send SM
 2. **Details step:**
    - Full name.
    - 10-digit mobile number (`inputMode="numeric"`).
-   - Assembly constituency through `GeoPicker stopAt="assembly"`.
+   - Assembly constituency through `GeoPicker`.
+   - Public only: area type and available rural or urban geography fields beneath the assembly constituency. These values are included in the existing `geoPath`.
    - Staff only: `termStart` and `termEnd` (`type="date"`, `termEnd >= termStart`).
    - Optional selfie capture using device camera or photo upload fallback (local capture feature).
 3. **OTP step:**
