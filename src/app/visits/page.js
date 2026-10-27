@@ -4,7 +4,7 @@ import { useState } from "react";
 import GeoPicker from "@/components/GeoPicker";
 import { useStore } from "@/lib/store";
 import { areaName } from "@/lib/geo";
-import { btnGhost, btnPrimary, inputClass, labelClass } from "@/components/ui";
+import { btnGhost, btnPrimary, cardClass, emptyClass, inputClass, labelClass } from "@/components/ui";
 
 export default function VisitsPage() {
   const { state, addVisit, deleteVisit, inArea, t } = useStore();
@@ -42,14 +42,14 @@ export default function VisitsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("visits.title")}</h1>
         <p className="mt-1 text-sm text-slate-600">{t("visits.lead")}</p>
       </header>
       <form
         onSubmit={onSubmit}
-        className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
+        className={`${cardClass} space-y-3`}
       >
         <GeoPicker nodes={state.geoNodes} value={geoPath} onChange={setGeoPath} t={t} />
         <label className="block">
@@ -75,12 +75,15 @@ export default function VisitsPage() {
           {t("visits.publish")}
         </button>
       </form>
+      {state.visits.length === 0 ? (
+        <p className={emptyClass}>{t("visits.empty")}</p>
+      ) : (
       <ul className="space-y-3">
         {state.visits.map((v) => {
           const n = state.contacts.filter((c) => inArea(c.geoPath, v.areaId)).length;
           const vol = state.volunteers.filter((c) => inArea(c.geoPath, v.areaId)).length;
           return (
-            <li key={v.id} className="rounded-xl border border-slate-200 bg-white p-4">
+            <li key={v.id} className={cardClass}>
               <p className="font-medium">
                 {v.date} · {areaName(state.geoNodes, v.areaId)}
               </p>
@@ -99,6 +102,7 @@ export default function VisitsPage() {
           );
         })}
       </ul>
+      )}
     </div>
   );
 }

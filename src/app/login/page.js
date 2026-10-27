@@ -74,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md space-y-4">
+    <div className="mx-auto max-w-lg space-y-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold text-slate-900">{t("login.title")}</h1>
         <p className="text-sm text-slate-600">{t("login.lead")}</p>
@@ -83,7 +83,7 @@ export default function LoginPage() {
       {step === 1 ? (
         <form
           onSubmit={handlePhoneSubmit}
-          className="space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
         >
           {error ? <p className="text-sm text-red-700">{error}</p> : null}
 
@@ -109,7 +109,7 @@ export default function LoginPage() {
       ) : (
         <form
           onSubmit={handleOtpSubmit}
-          className="space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
         >
           <div>
             <h2 className="text-lg font-semibold text-slate-900">{t("login.otpTitle")}</h2>
@@ -131,7 +131,7 @@ export default function LoginPage() {
           ) : null}
 
           {/* POC Mock OTP Box */}
-          <div className="rounded-xl border border-teal-200 bg-teal-50/80 p-4 text-teal-950">
+          <div className="rounded-xl border border-teal-200 bg-teal-50 p-4 text-teal-950">
             <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
               {t("login.pocOtpBox")}
             </p>

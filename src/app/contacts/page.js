@@ -6,7 +6,16 @@ import { DESIGNATIONS } from "@/data/seed";
 import GeoPicker from "@/components/GeoPicker";
 import { useStore } from "@/lib/store";
 import { formatPath } from "@/lib/geo";
-import { btnPrimary, formatPhone, inputClass, labelClass } from "@/components/ui";
+import {
+  btnPrimary,
+  cardClass,
+  emptyClass,
+  formatPhone,
+  inputClass,
+  labelClass,
+  listShellClass,
+  textLinkClass,
+} from "@/components/ui";
 
 export default function ContactsPage() {
   const { state, togglePin, inArea, t } = useStore();
@@ -37,18 +46,18 @@ export default function ContactsPage() {
   }, [state.contacts, q, designation, geo, areaId, inArea]);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5">
+    <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
+        <header>
           <h1 className="text-2xl font-semibold">{t("contacts.title")}</h1>
           <p className="mt-1 text-sm text-slate-600">{t("contacts.lead")}</p>
-        </div>
+        </header>
         <Link href="/contacts/new" className={btnPrimary}>
           {t("contacts.add")}
         </Link>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3">
+      <div className={`${cardClass} space-y-3`}>
         <label className="block">
           <span className={labelClass}>{t("contacts.searchLabel")}</span>
           <input
@@ -81,22 +90,26 @@ export default function ContactsPage() {
 
       <p className="text-sm text-slate-500">{t("contacts.count", { count: rows.length })}</p>
       {rows.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-          {t("contacts.empty")}
-        </p>
+        <p className={emptyClass}>{t("contacts.empty")}</p>
       ) : (
-        <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <ul className={listShellClass}>
           {rows.map((c) => (
             <li key={c.id} className="flex flex-wrap items-start justify-between gap-3 px-4 py-3">
-              <div>
-                <Link
-                  href={`/contacts/${c.id}`}
-                  className="font-medium text-slate-900 hover:underline"
-                >
-                  {c.pinned ? "📌 " : ""}
-                  {c.name}
-                </Link>
-                <p className="text-sm text-slate-700">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-baseline gap-2">
+                  {c.pinned ? (
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-teal-800">
+                      {t("contacts.pinned")}
+                    </span>
+                  ) : null}
+                  <Link
+                    href={`/contacts/${c.id}`}
+                    className="font-medium text-slate-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
+                  >
+                    {c.name}
+                  </Link>
+                </div>
+                <p className="text-sm text-slate-600">
                   {formatPhone(c.phone)} · {c.designation}
                 </p>
                 <p className="text-xs text-slate-500">
@@ -106,7 +119,7 @@ export default function ContactsPage() {
               <button
                 type="button"
                 onClick={() => togglePin(c.id)}
-                className="text-xs text-teal-800 underline"
+                className={textLinkClass}
               >
                 {c.pinned ? t("contacts.unpin") : t("contacts.pin")}
               </button>

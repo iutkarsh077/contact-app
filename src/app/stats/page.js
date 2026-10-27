@@ -5,6 +5,7 @@ import GeoPicker from "@/components/GeoPicker";
 import StatCard from "@/components/StatCard";
 import { useStore } from "@/lib/store";
 import { areaName } from "@/lib/geo";
+import { cardClass } from "@/components/ui";
 
 export default function StatsPage() {
   const { state, inArea, t } = useStore();
@@ -33,12 +34,12 @@ export default function StatsPage() {
   }, [state, areaId, inArea]);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5">
+    <div className="mx-auto max-w-5xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("stats.title")}</h1>
         <p className="mt-1 text-sm text-slate-600">{t("stats.lead")}</p>
       </header>
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
+      <div className={cardClass}>
         <GeoPicker nodes={state.geoNodes} value={geo} onChange={setGeo} allowEmpty t={t} />
       </div>
       <p className="text-sm text-slate-600">

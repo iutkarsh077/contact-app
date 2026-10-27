@@ -79,6 +79,7 @@ export default {
     count: "{count} contacts",
     empty:
       "No contacts match this search or area. Try a higher administrative level.",
+    pinned: "Pinned",
     pin: "Pin",
     unpin: "Unpin",
     newTitle: "Add contact",
@@ -169,6 +170,7 @@ export default {
     title: "Volunteers",
     lead: "People who registered through the application.",
     openForm: "Open public form",
+    empty: "No volunteer registrations yet.",
     fallbackRole: "Volunteer",
     accept: "Accept",
     registerTitle: "Register as a volunteer",
@@ -223,6 +225,7 @@ export default {
     required: "Choose an area, date, and message",
     reaches:
       "Reaches {contacts} contacts and {volunteers} volunteers in this area.",
+    empty: "No travel notices yet.",
     remove: "Remove",
   },
   status: {

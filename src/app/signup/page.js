@@ -95,7 +95,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg space-y-4">
+    <div className="mx-auto max-w-lg space-y-6">
       {/* Header and Step Indicator */}
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold text-slate-900">{t("signup.title")}</h1>
@@ -116,7 +116,7 @@ export default function SignupPage() {
 
       {/* STEP 1: Role Selection */}
       {step === 1 ? (
-        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-5">
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">{t("signup.roleTitle")}</h2>
             <p className="mt-1 text-sm text-slate-600">{t("signup.roleLead")}</p>
@@ -126,10 +126,10 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => setRole("staff")}
-              className={`rounded-xl border p-4 text-left transition ${
+              className={`rounded-xl border p-4 text-left ${
                 role === "staff"
-                  ? "border-teal-800 bg-teal-50/60 ring-2 ring-teal-800/20"
-                  : "border-slate-200 bg-white hover:border-slate-300"
+                  ? "border-teal-800 bg-teal-50"
+                  : "border-slate-200 bg-white hover:border-teal-700"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -154,10 +154,10 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => setRole("public")}
-              className={`rounded-xl border p-4 text-left transition ${
+              className={`rounded-xl border p-4 text-left ${
                 role === "public"
-                  ? "border-teal-800 bg-teal-50/60 ring-2 ring-teal-800/20"
-                  : "border-slate-200 bg-white hover:border-slate-300"
+                  ? "border-teal-800 bg-teal-50"
+                  : "border-slate-200 bg-white hover:border-teal-700"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -196,7 +196,7 @@ export default function SignupPage() {
       {step === 2 ? (
         <form
           onSubmit={handleDetailsContinue}
-          className="space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
         >
           <div>
             <h2 className="text-lg font-semibold text-slate-900">{t("signup.detailsTitle")}</h2>
@@ -296,7 +296,7 @@ export default function SignupPage() {
       {step === 3 ? (
         <form
           onSubmit={handleOtpSubmit}
-          className="space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
         >
           <div>
             <h2 className="text-lg font-semibold text-slate-900">{t("signup.otpTitle")}</h2>
@@ -304,7 +304,7 @@ export default function SignupPage() {
           </div>
 
           {/* POC OTP Box */}
-          <div className="rounded-xl border border-teal-200 bg-teal-50/80 p-4 text-teal-950">
+          <div className="rounded-xl border border-teal-200 bg-teal-50 p-4 text-teal-950">
             <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
               {t("signup.pocOtpBox")}
             </p>

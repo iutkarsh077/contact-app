@@ -45,7 +45,7 @@ export default function VolunteerRegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-2xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("volunteers.registerTitle")}</h1>
         <p className="mt-1 text-sm text-slate-600">{t("volunteers.registerLead")}</p>
@@ -60,7 +60,13 @@ export default function VolunteerRegisterPage() {
         </label>
         <label className="block">
           <span className={labelClass}>{t("volunteers.phone")}</span>
-          <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <input
+            className={inputClass}
+            inputMode="numeric"
+            maxLength={10}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </label>
         <label className="block">
           <span className={labelClass}>{t("volunteers.role")}</span>

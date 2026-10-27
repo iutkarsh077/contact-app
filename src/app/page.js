@@ -5,7 +5,7 @@ import Link from "next/link";
 import StatCard from "@/components/StatCard";
 import { useStore } from "@/lib/store";
 import { areaName, formatPath } from "@/lib/geo";
-import { cardLinkClass, formatPhone } from "@/components/ui";
+import { cardLinkClass, emptyClass, formatPhone, listShellClass, sectionLabelClass, textLinkClass } from "@/components/ui";
 
 export default function HomePage() {
   const { state, role, inArea, t } = useStore();
@@ -90,11 +90,9 @@ export default function HomePage() {
         </Link>
       </div>
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t("home.travel")}
-        </h2>
+        <h2 className={sectionLabelClass}>{t("home.travel")}</h2>
         {upcomingVisits.length === 0 ? (
-          <p className="text-sm text-slate-500">{t("home.noVisits")}</p>
+          <p className={emptyClass}>{t("home.noVisits")}</p>
         ) : (
           upcomingVisits.map((v) => {
             const notified = contacts.filter((c) =>
@@ -124,21 +122,16 @@ export default function HomePage() {
         )}
       </section>
       <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            {t("home.pinned")}
-          </h2>
-          <Link
-            href="/contacts"
-            className="text-sm text-teal-800 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
-          >
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className={sectionLabelClass}>{t("home.pinned")}</h2>
+          <Link href="/contacts" className={textLinkClass}>
             {t("home.openContacts")}
           </Link>
         </div>
         {pinned.length === 0 ? (
-          <p className="text-sm text-slate-500">{t("home.noPinned")}</p>
+          <p className={emptyClass}>{t("home.noPinned")}</p>
         ) : (
-          <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className={listShellClass}>
             {pinned.map((c) => (
               <li key={c.id} className="px-4 py-3">
                 <Link
@@ -164,11 +157,7 @@ export default function HomePage() {
 
 function VisitList({ visits, geoNodes, t }) {
   if (visits.length === 0) {
-    return (
-      <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-        {t("home.noNotices")}
-      </p>
-    );
+    return <p className="text-sm text-slate-500">{t("home.noNotices")}</p>;
   }
   return (
     <div className="space-y-3">

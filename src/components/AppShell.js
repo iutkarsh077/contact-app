@@ -10,10 +10,10 @@ const STAFF_NAV = [
   { href: "/", labelKey: "nav.dashboard" },
   { href: "/contacts", labelKey: "nav.contacts" },
   { href: "/appointments", labelKey: "nav.appointments" },
-  { href: "/volunteers", labelKey: "nav.volunteers" },
-  { href: "/stats", labelKey: "nav.stats" },
-  { href: "/visits", labelKey: "nav.visits" },
   { href: "/requests", labelKey: "nav.requests" },
+  { href: "/volunteers", labelKey: "nav.volunteers" },
+  { href: "/visits", labelKey: "nav.visits" },
+  { href: "/stats", labelKey: "nav.stats" },
 ];
 
 const PUBLIC_NAV = [
@@ -59,6 +59,53 @@ function chipClass(active) {
   }`;
 }
 
+function LanguagePills({ locale, setLocale, t, showLabel }) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {showLabel ? (
+        <span className="hidden text-xs text-slate-500 sm:inline">
+          {t("shell.language")}
+        </span>
+      ) : null}
+      {LOCALES.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          aria-pressed={locale === item.id}
+          onClick={() => setLocale(item.id)}
+          className={localeClass(locale === item.id)}
+        >
+          {t(`lang.${item.id}`)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function AuthHeader({
+  kicker,
+  title,
+  locale,
+  setLocale,
+  t,
+  trailing,
+}) {
+  return (
+    <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
+          {kicker}
+        </p>
+        <p className="text-base font-semibold">{title}</p>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <LanguagePills locale={locale} setLocale={setLocale} t={t} showLabel />
+        {trailing}
+      </div>
+    </header>
+  );
+}
+
 export default function AppShell({ children }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -70,7 +117,6 @@ export default function AppShell({ children }) {
     adminSession,
     adminLogout,
     signOut,
-    reset,
     locale,
     setLocale,
     t,
@@ -116,7 +162,6 @@ export default function AppShell({ children }) {
     chip.scrollIntoView({ inline: "nearest", block: "nearest" });
   }, [pathname, role]);
 
-  // Loading state while hydrating store from localStorage
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500">
@@ -125,114 +170,79 @@ export default function AppShell({ children }) {
     );
   }
 
-  // Admin Route Door
   if (isAdminPath) {
     return (
       <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
-        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-teal-800 font-semibold">
-              {t("shell.office")}
-            </p>
-            <p className="text-base font-semibold">{t("admin.title")}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="hidden text-xs text-slate-500 sm:inline">
-                {t("shell.language")}
-              </span>
-              {LOCALES.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={locale === item.id}
-                  onClick={() => setLocale(item.id)}
-                  className={localeClass(locale === item.id)}
-                >
-                  {t(`lang.${item.id}`)}
-                </button>
-              ))}
-            </div>
-            {adminSession ? (
+        <AuthHeader
+          kicker={t("shell.office")}
+          title={t("admin.title")}
+          locale={locale}
+          setLocale={setLocale}
+          t={t}
+          trailing={
+            adminSession ? (
               <button
                 type="button"
                 onClick={adminLogout}
-                className="text-xs text-slate-600 hover:text-slate-900 underline"
+                className="text-xs text-slate-600 underline hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
               >
                 {t("shell.signOut")}
               </button>
             ) : (
               <Link
                 href="/signup"
-                className="text-xs text-slate-600 hover:text-teal-800 underline"
+                className="text-xs text-slate-600 underline hover:text-teal-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
               >
                 {t("admin.backToSignup")}
               </Link>
-            )}
-          </div>
-        </header>
+            )
+          }
+        />
         <main className="flex-1 p-4 pb-8 md:p-6">{children}</main>
       </div>
     );
   }
 
-  // Unauthenticated on Signup or Login Page
   if (!session && isAuthPath) {
     return (
       <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
-        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-teal-800 font-semibold">
-              {t("shell.office")}
-            </p>
-            <p className="text-base font-semibold">{t("shell.desk")}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="hidden text-xs text-slate-500 sm:inline">
-                {t("shell.language")}
-              </span>
-              {LOCALES.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={locale === item.id}
-                  onClick={() => setLocale(item.id)}
-                  className={localeClass(locale === item.id)}
+        <AuthHeader
+          kicker={t("shell.office")}
+          title={t("shell.desk")}
+          locale={locale}
+          setLocale={setLocale}
+          t={t}
+          trailing={
+            <>
+              {isSignupPath ? (
+                <Link
+                  href="/login"
+                  className="text-xs text-slate-600 underline hover:text-teal-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
                 >
-                  {t(`lang.${item.id}`)}
-                </button>
-              ))}
-            </div>
-            {isSignupPath ? (
+                  {t("login.title")}
+                </Link>
+              ) : (
+                <Link
+                  href="/signup"
+                  className="text-xs text-slate-600 underline hover:text-teal-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
+                >
+                  {t("signup.title")}
+                </Link>
+              )}
               <Link
-                href="/login"
-                className="text-xs text-slate-600 hover:text-teal-800 underline"
+                href="/admin"
+                className="text-xs text-slate-600 underline hover:text-teal-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
               >
-                {t("login.title")}
+                {t("shell.admin")}
               </Link>
-            ) : (
-              <Link
-                href="/signup"
-                className="text-xs text-slate-600 hover:text-teal-800 underline"
-              >
-                {t("signup.title")}
-              </Link>
-            )}
-            <Link
-              href="/admin"
-              className="text-xs text-slate-600 hover:text-teal-800 underline"
-            >
-              {t("shell.admin")}
-            </Link>
-          </div>
-        </header>
+            </>
+          }
+        />
         <main className="flex-1 p-4 pb-8 md:p-6">{children}</main>
       </div>
     );
   }
 
-  // Unauthenticated on protected route (redirecting)
   if (!session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500">
@@ -241,56 +251,40 @@ export default function AppShell({ children }) {
     );
   }
 
-  // Pending Staff Waiting Gate
   if (isPendingStaff) {
     return (
       <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
-        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-teal-800 font-semibold">
-              {t("shell.office")}
-            </p>
-            <p className="text-base font-semibold">{t("shell.desk")}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-xs font-semibold text-slate-800">
-              {session.name}
-            </span>
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800">
-              {t("status.pending")}
-            </span>
-            <div className="flex items-center gap-1.5">
-              {LOCALES.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={locale === item.id}
-                  onClick={() => setLocale(item.id)}
-                  className={localeClass(locale === item.id)}
-                >
-                  {t(`lang.${item.id}`)}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={signOut}
-              className="text-xs text-slate-500 hover:text-slate-800 underline"
-            >
-              {t("shell.signOut")}
-            </button>
-          </div>
-        </header>
+        <AuthHeader
+          kicker={t("shell.office")}
+          title={t("shell.desk")}
+          locale={locale}
+          setLocale={setLocale}
+          t={t}
+          trailing={
+            <>
+              <span className="text-xs font-semibold text-slate-800">
+                {session.name}
+              </span>
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800">
+                {t("status.pending")}
+              </span>
+              <button
+                type="button"
+                onClick={signOut}
+                className="text-xs text-slate-600 underline hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
+              >
+                {t("shell.signOut")}
+              </button>
+            </>
+          }
+        />
         <main className="flex-1 p-4 pb-8 md:p-6">
           <div className="mx-auto max-w-lg space-y-4 rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-950">
-            <span className="inline-block rounded-full bg-amber-200/80 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-900">
-              {t("shell.waitingTitle")}
-            </span>
             <h1 className="text-xl font-semibold text-amber-950">
               {t("shell.waitingTitle")}
             </h1>
             <p className="text-sm text-amber-900">{t("shell.waitingLead")}</p>
-            <div className="space-y-1.5 rounded-lg border border-amber-200 bg-white/80 p-4 text-xs text-amber-950">
+            <div className="space-y-1.5 rounded-lg border border-amber-200 bg-white p-4 text-xs text-amber-950">
               <p>
                 <span className="font-semibold text-slate-600">
                   {t("signup.name")}:
@@ -312,7 +306,7 @@ export default function AppShell({ children }) {
                 </span>
               </p>
             </div>
-            <p className="text-xs leading-relaxed text-amber-900/90">
+            <p className="text-xs leading-relaxed text-amber-900">
               {t("shell.waitingNote")}
             </p>
           </div>
@@ -321,10 +315,9 @@ export default function AppShell({ children }) {
     );
   }
 
-  // Verified Staff and Public Session Views
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900">
-      <aside className="hidden sticky top-0 h-screen w-60 shrink-0 flex-col overflow-y-auto bg-slate-900 text-slate-100 md:flex">
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col overflow-y-auto bg-slate-900 text-slate-100 md:flex">
         <div className="border-b border-slate-800 px-4 py-5">
           <p className="text-xs uppercase tracking-wider text-teal-300">
             {t("shell.office")}
@@ -347,10 +340,18 @@ export default function AppShell({ children }) {
           })}
         </nav>
         <div className="border-t border-slate-800 p-3">
+          <p className="truncate px-3 text-xs font-medium text-slate-200">
+            {session.name}
+          </p>
+          {isVerifiedStaff ? (
+            <p className="px-3 pb-2 text-[11px] text-slate-400">
+              {t("shell.staff")}
+            </p>
+          ) : null}
           <button
             type="button"
             onClick={signOut}
-            className="w-full rounded-lg px-3 py-2 hover:cursor-pointer text-left text-sm text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/50"
+            className="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/50"
           >
             {t("shell.signOut")}
           </button>
@@ -360,23 +361,13 @@ export default function AppShell({ children }) {
         <div className="sticky top-0 z-10 bg-white">
           <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
             <p className="font-semibold md:hidden">{pageTitle}</p>
-            <div className="flex min-w-0 flex-wrap items-center gap-3 md:ml-auto md:mr-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="hidden text-xs text-slate-500 sm:inline">
-                  {t("shell.language")}
-                </span>
-                {LOCALES.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    aria-pressed={locale === item.id}
-                    onClick={() => setLocale(item.id)}
-                    className={localeClass(locale === item.id)}
-                  >
-                    {t(`lang.${item.id}`)}
-                  </button>
-                ))}
-              </div>
+            <div className="flex min-w-0 flex-wrap items-center gap-3 md:ml-auto">
+              <LanguagePills
+                locale={locale}
+                setLocale={setLocale}
+                t={t}
+                showLabel
+              />
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-semibold text-slate-800">
                   {session.name}
@@ -386,24 +377,13 @@ export default function AppShell({ children }) {
                     {t("shell.staff")}
                   </span>
                 ) : null}
-                {/* {isVerifiedStaff ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (confirm(t("shell.resetConfirm"))) reset();
-                    }}
-                    className="text-xs text-slate-500 underline"
-                  >
-                    {t("shell.reset")}
-                  </button>
-                ) : null} */}
-                {/* <button
+                <button
                   type="button"
                   onClick={signOut}
-                  className="text-xs text-slate-600 hover:text-slate-900 underline"
+                  className="text-xs text-slate-600 underline hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
                 >
                   {t("shell.signOut")}
-                </button> */}
+                </button>
               </div>
             </div>
           </header>
@@ -426,9 +406,6 @@ export default function AppShell({ children }) {
               );
             })}
           </nav>
-          {/* <p className="border-b border-slate-200 px-4 py-2 text-[11px] leading-4 text-slate-500 md:hidden">
-            {t("shell.pocNote")}
-          </p> */}
         </div>
         <main className="flex-1 p-4 pb-8 md:p-6">
           {blocked ? (

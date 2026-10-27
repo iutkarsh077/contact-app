@@ -44,7 +44,7 @@ export default function NewRequestPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-2xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("requests.newTitle")}</h1>
         <p className="mt-1 text-sm text-slate-600">{t("requests.newLead")}</p>
@@ -59,7 +59,13 @@ export default function NewRequestPage() {
         </label>
         <label className="block">
           <span className={labelClass}>{t("requests.phone")}</span>
-          <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <input
+            className={inputClass}
+            inputMode="numeric"
+            maxLength={10}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </label>
         <GeoPicker nodes={state.geoNodes} value={geoPath} onChange={setGeoPath} t={t} />
         <label className="block">

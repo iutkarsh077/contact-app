@@ -9,9 +9,12 @@ import { formatPath } from "@/lib/geo";
 import {
   btnGhost,
   btnPrimary,
+  cardClass,
+  emptyClass,
   formatDate,
   formatPhone,
   inputClass,
+  textLinkClass,
 } from "@/components/ui";
 
 function ContactDetailInner() {
@@ -35,7 +38,7 @@ function ContactDetailInner() {
   const [note, setNote] = useState("");
 
   if (!contact) {
-    return <p className="text-sm text-slate-500">{t("contacts.notFound")}</p>;
+    return <p className={emptyClass}>{t("contacts.notFound")}</p>;
   }
 
   return (
@@ -43,15 +46,19 @@ function ContactDetailInner() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs text-slate-500">
-            <Link href="/contacts" className="underline">
+            <Link href="/contacts" className={textLinkClass}>
               {t("nav.contacts")}
             </Link>
           </p>
-          <h1 className="text-2xl font-semibold">
-            {contact.pinned ? "📌 " : ""}
-            {contact.name}
-          </h1>
-          <p className="text-slate-700">
+          <div className="mt-1 flex flex-wrap items-baseline gap-2">
+            {contact.pinned ? (
+              <span className="text-[11px] font-medium uppercase tracking-wide text-teal-800">
+                {t("contacts.pinned")}
+              </span>
+            ) : null}
+            <h1 className="text-2xl font-semibold">{contact.name}</h1>
+          </div>
+          <p className="text-sm text-slate-600">
             {formatPhone(contact.phone)} · {contact.designation}
           </p>
           <p className="text-sm text-slate-500">
@@ -81,7 +88,7 @@ function ContactDetailInner() {
       </div>
 
       {editing ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
+        <div className={cardClass}>
           <ContactForm
             nodes={state.geoNodes}
             initial={contact}
@@ -96,8 +103,8 @@ function ContactDetailInner() {
         </div>
       ) : null}
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <h2 className="text-lg font-semibold">{t("contacts.notes")}</h2>
+      <section className={cardClass}>
+        <h2 className="text-lg font-medium">{t("contacts.notes")}</h2>
         <p className="mb-3 text-sm text-slate-600">{t("contacts.notesLead")}</p>
         <form
           className="mb-4 flex flex-col gap-2 sm:flex-row"
@@ -119,17 +126,19 @@ function ContactDetailInner() {
           </button>
         </form>
         {notes.length === 0 ? (
-          <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-500">
-            {t("contacts.noNotes")}
-          </p>
+          <p className={emptyClass}>{t("contacts.noNotes")}</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="divide-y divide-slate-100 border-t border-slate-100">
             {notes.map((n) => (
-              <li key={n.id} className="rounded-lg border border-slate-100 p-3">
+              <li key={n.id} className="py-3">
                 <p className="text-sm">{n.text}</p>
-                <div className="mt-1 flex justify-between text-xs text-slate-500">
+                <div className="mt-1 flex justify-between gap-3 text-xs text-slate-500">
                   <span>{formatDate(n.createdAt, locale)}</span>
-                  <button type="button" onClick={() => deleteNote(n.id)}>
+                  <button
+                    type="button"
+                    className="text-red-700 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
+                    onClick={() => deleteNote(n.id)}
+                  >
                     {t("contacts.remove")}
                   </button>
                 </div>
@@ -139,27 +148,22 @@ function ContactDetailInner() {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <div className="mb-3 flex items-center justify-between">
+      <section className={cardClass}>
+        <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold">{t("contacts.appointments")}</h2>
+            <h2 className="text-lg font-medium">{t("contacts.appointments")}</h2>
             <p className="text-sm text-slate-600">{t("contacts.appointmentsLead")}</p>
           </div>
-          <Link
-            href={`/appointments?contactId=${contact.id}`}
-            className="text-sm text-teal-800 underline"
-          >
+          <Link href={`/appointments?contactId=${contact.id}`} className={textLinkClass}>
             {t("contacts.schedule")}
           </Link>
         </div>
         {appts.length === 0 ? (
-          <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-500">
-            {t("contacts.noAppointments")}
-          </p>
+          <p className={emptyClass}>{t("contacts.noAppointments")}</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="divide-y divide-slate-100 border-t border-slate-100">
             {appts.map((a) => (
-              <li key={a.id} className="rounded-lg border border-slate-100 p-3">
+              <li key={a.id} className="py-3">
                 <p className="font-medium">{a.title}</p>
                 <p className="text-sm text-slate-600">{formatDate(a.datetime, locale)}</p>
                 {a.documentName ? (
@@ -169,7 +173,7 @@ function ContactDetailInner() {
                 ) : null}
                 <button
                   type="button"
-                  className="mt-1 text-xs text-red-700"
+                  className="mt-1 text-xs text-red-700 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40"
                   onClick={() => deleteAppointment(a.id)}
                 >
                   {t("contacts.cancel")}

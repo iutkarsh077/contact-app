@@ -7,10 +7,13 @@ import { formatPath } from "@/lib/geo";
 import {
   btnGhost,
   btnPrimary,
+  cardClass,
+  emptyClass,
   formatDate,
   formatPhone,
   inputClass,
   labelClass,
+  listShellClass,
 } from "@/components/ui";
 
 export default function AdminPage() {
@@ -40,7 +43,7 @@ export default function AdminPage() {
   // Not signed in as admin: show login form
   if (!adminSession) {
     return (
-      <div className="mx-auto max-w-md space-y-4">
+      <div className="mx-auto max-w-lg space-y-6">
         <header className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900">{t("admin.loginTitle")}</h1>
           <p className="text-sm text-slate-600">{t("admin.lead")}</p>
@@ -48,7 +51,7 @@ export default function AdminPage() {
 
         <form
           onSubmit={handleLogin}
-          className="space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
         >
           {error ? <p className="text-sm text-red-700">{error}</p> : null}
 
@@ -103,13 +106,13 @@ export default function AdminPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-900">{t("admin.title")}</h1>
-          <p className="text-xs text-slate-500">
-            {t("admin.loginTitle")}: <span className="font-mono text-slate-700">{adminSession.email}</span>
+      <div className={`flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${cardClass}`}>
+        <header>
+          <h1 className="text-2xl font-semibold text-slate-900">{t("admin.title")}</h1>
+          <p className="mt-1 text-sm text-slate-600">
+            {adminSession.email}
           </p>
-        </div>
+        </header>
         <div className="flex items-center gap-2">
           <Link href="/signup" className={btnGhost}>
             {t("admin.backToSignup")}
@@ -129,11 +132,9 @@ export default function AdminPage() {
         </div>
 
         {pendingStaff.length === 0 ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-            {t("admin.noPending")}
-          </div>
+          <p className={emptyClass}>{t("admin.noPending")}</p>
         ) : (
-          <div className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
+          <div className={listShellClass}>
             {pendingStaff.map((acc) => (
               <div
                 key={acc.id}
@@ -177,11 +178,9 @@ export default function AdminPage() {
         </div>
 
         {verifiedStaff.length === 0 ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-            {t("admin.noVerified")}
-          </div>
+          <p className={emptyClass}>{t("admin.noVerified")}</p>
         ) : (
-          <div className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
+          <div className={listShellClass}>
             {verifiedStaff.map((acc) => (
               <div
                 key={acc.id}

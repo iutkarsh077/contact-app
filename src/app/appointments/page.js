@@ -8,10 +8,13 @@ import { formatPath } from "@/lib/geo";
 import {
   btnGhost,
   btnPrimary,
+  cardClass,
+  emptyClass,
   fileToDocument,
   formatDate,
   inputClass,
   labelClass,
+  listShellClass,
 } from "@/components/ui";
 
 function AppointmentsInner() {
@@ -61,7 +64,7 @@ function AppointmentsInner() {
   );
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("appointments.title")}</h1>
         <p className="mt-1 text-sm text-slate-600">{t("appointments.lead")}</p>
@@ -69,7 +72,7 @@ function AppointmentsInner() {
 
       <form
         onSubmit={onSubmit}
-        className="space-y-3 rounded-xl border border-slate-200 bg-white p-4"
+        className={`${cardClass} space-y-3`}
       >
         <label className="block">
           <span className={labelClass}>{t("appointments.fieldTitle")}</span>
@@ -121,48 +124,50 @@ function AppointmentsInner() {
         </button>
       </form>
 
-      <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
-        {sorted.length === 0 ? (
-          <li className="p-6 text-sm text-slate-500">{t("appointments.empty")}</li>
-        ) : (
-          sorted.map((a) => {
+      {sorted.length === 0 ? (
+        <p className={emptyClass}>{t("appointments.empty")}</p>
+      ) : (
+      <ul className={listShellClass}>
+          {sorted.map((a) => {
             const contact = state.contacts.find((c) => c.id === a.contactId);
             return (
-              <li key={a.id} className="px-4 py-3">
-                <p className="font-medium">{a.title}</p>
-                <p className="text-sm text-slate-600">{formatDate(a.datetime, locale)}</p>
-                <p className="text-xs text-slate-500">
-                  {contact
-                    ? t("appointments.with", { name: contact.name })
-                    : formatPath(state.geoNodes, a.geoPath)}
-                </p>
-                {a.documentName ? (
-                  a.documentDataUrl ? (
-                    <a
-                      href={a.documentDataUrl}
-                      download={a.documentName}
-                      className="text-xs text-teal-800 underline"
-                    >
-                      {a.documentName}
-                    </a>
-                  ) : (
-                    <p className="text-xs text-slate-500">
-                      {t("contacts.document", { name: a.documentName })}
-                    </p>
-                  )
-                ) : null}
+              <li key={a.id} className="flex flex-wrap items-start justify-between gap-3 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="font-medium">{a.title}</p>
+                  <p className="text-sm text-slate-600">{formatDate(a.datetime, locale)}</p>
+                  <p className="text-xs text-slate-500">
+                    {contact
+                      ? t("appointments.with", { name: contact.name })
+                      : formatPath(state.geoNodes, a.geoPath)}
+                  </p>
+                  {a.documentName ? (
+                    a.documentDataUrl ? (
+                      <a
+                        href={a.documentDataUrl}
+                        download={a.documentName}
+                        className="text-xs text-teal-800 underline"
+                      >
+                        {a.documentName}
+                      </a>
+                    ) : (
+                      <p className="text-xs text-slate-500">
+                        {t("contacts.document", { name: a.documentName })}
+                      </p>
+                    )
+                  ) : null}
+                </div>
                 <button
                   type="button"
-                  className={`${btnGhost} mt-2`}
+                  className={btnGhost}
                   onClick={() => deleteAppointment(a.id)}
                 >
                   {t("appointments.cancel")}
                 </button>
               </li>
             );
-          })
-        )}
+          })}
       </ul>
+      )}
     </div>
   );
 }

@@ -79,7 +79,7 @@ export default function ContactForm({
         </datalist>
       </label>
       <div>
-        <p className="mb-2 text-sm font-medium text-slate-800">
+        <p className={labelClass}>
           {label("contactForm.geo", "Geographical area")}
         </p>
         <GeoPicker nodes={nodes} value={geoPath} onChange={setGeoPath} t={t} />

@@ -12,6 +12,19 @@ export const btnGhost =
 export const cardLinkClass =
   "group block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40";
 
+export const cardClass = "rounded-xl border border-slate-200 bg-white p-4";
+
+export const listShellClass =
+  "divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white";
+
+export const textLinkClass =
+  "text-sm text-teal-800 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700/40";
+
+export const emptyClass = "text-sm text-slate-500";
+
+export const sectionLabelClass =
+  "text-sm font-semibold uppercase tracking-wide text-slate-500";
+
 export function formatDate(iso, locale) {
   if (!iso) return "—";
   const d = new Date(iso);
