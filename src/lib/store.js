@@ -113,7 +113,7 @@ export function StoreProvider({ children }) {
             ? {
                 termStart,
                 termEnd,
-                status: "verified",
+                status: "pending",
               }
             : {
                 status: "verified",

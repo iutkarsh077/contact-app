@@ -346,15 +346,21 @@ export default function AppShell({ children }) {
             );
           })}
         </nav>
-        {/* <p className="px-4 pb-4 text-[11px] leading-4 text-slate-500">
-          {t("shell.pocNote")}
-        </p> */}
+        <div className="border-t border-slate-800 p-3">
+          <button
+            type="button"
+            onClick={signOut}
+            className="w-full rounded-lg px-3 py-2 hover:cursor-pointer text-left text-sm text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/50"
+          >
+            {t("shell.signOut")}
+          </button>
+        </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="sticky top-0 z-10 bg-white">
           <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
             <p className="font-semibold md:hidden">{pageTitle}</p>
-            <div className="flex min-w-0 flex-wrap items-center gap-3 md:ml-auto">
+            <div className="flex min-w-0 flex-wrap items-center gap-3 md:ml-auto md:mr-3">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="hidden text-xs text-slate-500 sm:inline">
                   {t("shell.language")}
@@ -391,13 +397,13 @@ export default function AppShell({ children }) {
                     {t("shell.reset")}
                   </button>
                 ) : null} */}
-                <button
+                {/* <button
                   type="button"
                   onClick={signOut}
                   className="text-xs text-slate-600 hover:text-slate-900 underline"
                 >
                   {t("shell.signOut")}
-                </button>
+                </button> */}
               </div>
             </div>
           </header>
